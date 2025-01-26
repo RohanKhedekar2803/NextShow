@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import com.example.movies_service.DTO.ErrorResponse;
 import com.example.movies_service.exceptions.MissingCompulsoryFeilds;
 import com.example.movies_service.exceptions.MovieNotFoundException;
+import com.example.movies_service.exceptions.TheaterNotFoundException;
 
 
 @ControllerAdvice
@@ -25,23 +26,28 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
     
-
-    // You can also handle other exceptions like internal server errors
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
-        ErrorResponse errorResponse = ErrorResponse.builder()
-                .message("Internal Server Error")
-                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .build();
-        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-    
     @ExceptionHandler(MissingCompulsoryFeilds.class)
-    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
+    public ResponseEntity<ErrorResponse> handleMissingCompulsoryFeilds(MissingCompulsoryFeilds ex) {
+    	
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .message(ex.getMessage())
-                .status(HttpStatus.BAD_REQUEST.value())
+                .status(HttpStatus.NOT_FOUND.value())
+                .timestamp(System.currentTimeMillis())
                 .build();
+        
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
+    
+    @ExceptionHandler(TheaterNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleMovieNotFound(TheaterNotFoundException ex) {
+    	
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .message(ex.getMessage())
+                .status(HttpStatus.NOT_FOUND.value())
+                .timestamp(System.currentTimeMillis())
+                .build();
+        
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
 }

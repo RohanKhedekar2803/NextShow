@@ -15,7 +15,18 @@ spring:
         - id: movies-service
           uri: lb://movies-service
           predicates:
-            - Path=/movies/**
+            - Path=/movies/*
+            
+        - id: movies-service
+          uri: lb://movies-service
+          predicates:
+            - Path=/screens/**
+            
+        - id: movies-service
+          uri: lb://movies-service
+          predicates:
+            - Path=/theaters/**
+            
         - id: user-service
           uri: lb://users-service
           predicates:
