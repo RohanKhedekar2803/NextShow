@@ -33,4 +33,9 @@ public class Screen {
     private int screenNumber;
 
     private int capacity;
+    
+    private int rows;
+    
+    private int calls;
+    ;
 }
