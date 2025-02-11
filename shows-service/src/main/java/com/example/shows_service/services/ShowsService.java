@@ -22,10 +22,6 @@ public class ShowsService {
 		validateShow(showDTO);
 		Shows shows = convertToEntity(showDTO);
 		
-		// retrive number of total seats for this screen
-		
-		
-		
 		Shows savedShow = showsRepository.save(shows);
 		return convertToDTO(savedShow);
 	}
@@ -47,12 +43,11 @@ public class ShowsService {
 		validateShow(updatedshowDTO);
 		Shows existingShow = showsRepository.findById(showId)
 				.orElseThrow(() -> new MissingCompulsoryFeilds("Show with ID " + showId + " not found."));
-		existingShow.setMovieId(updatedshowDTO.getMovieId());
-		existingShow.setScreenId(updatedshowDTO.getScreenId());
-		existingShow.setTheaterId(updatedshowDTO.getTheaterId());
+		existingShow.setEventId(updatedshowDTO.getEventId());
+		existingShow.setAuditoriumId(updatedshowDTO.getAuditoriumId());
+		existingShow.setBlockprices(updatedshowDTO.getBlockprices());
 		existingShow.setStartTime(updatedshowDTO.getStartTime());
 		existingShow.setEndTime(updatedshowDTO.getEndTime());
-		existingShow.setPrice(updatedshowDTO.getPrice());
 		Shows updatedShow = showsRepository.save(existingShow);
 		return convertToDTO(updatedShow);
 	}
@@ -67,8 +62,8 @@ public class ShowsService {
 	
 	// Validate essential fields
 	private void validateShow(showDTO showDTO) {
-		if (showDTO.getMovieId() == null || showDTO.getScreenId() == null || showDTO.getTheaterId() == null
-				|| showDTO.getStartTime() == null || showDTO.getEndTime() == null || showDTO.getPrice() == null) {
+		if (showDTO.getAuditoriumId() == null || showDTO.getBlockprices() == null || showDTO.getEventId() == null
+				|| showDTO.getStartTime() == null || showDTO.getEndTime() == null ) {
 			throw new MissingCompulsoryFeilds("Essential fields are missing in the showDTO.");
 		}
 	}
@@ -76,18 +71,18 @@ public class ShowsService {
 	// Convert showDTO to Show entity
 	private Shows convertToEntity(showDTO showDTO) {
 		Shows shows = new Shows();
-		shows.setMovieId(showDTO.getMovieId());
-		shows.setScreenId(showDTO.getScreenId());
-		shows.setTheaterId(showDTO.getTheaterId());
+		shows.setAuditoriumId(showDTO.getAuditoriumId());
+		shows.setEventId(showDTO.getEventId());
+		shows.setShowId(showDTO.getShowId());
 		shows.setStartTime(showDTO.getStartTime());
 		shows.setEndTime(showDTO.getEndTime());
-		shows.setPrice(showDTO.getPrice());
+		shows.setBlockprices(showDTO.getBlockprices());
 		return shows;
 	}
 	
 	// Convert Show entity to showDTO
 	private showDTO convertToDTO(Shows shows) {
-		return showDTO.builder().movieId(shows.getMovieId()).screenId(shows.getScreenId()).theaterId(shows.getTheaterId())
-				.startTime(shows.getStartTime()).endTime(shows.getEndTime()).price(shows.getPrice()).showId(shows.getShowId()).build();
+		return showDTO.builder().showId(shows.getShowId()).eventId(shows.getEventId()).auditoriumId(shows.getAuditoriumId()).blockprices(shows.getBlockprices())
+				.startTime(shows.getStartTime()).endTime(shows.getEndTime()).build();
 	}
 }

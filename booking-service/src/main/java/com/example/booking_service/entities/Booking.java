@@ -1,7 +1,8 @@
-package com.example.movies_service.entities;
+package com.example.booking_service.entities;
 
 import java.util.List;
 
+import com.example.booking_service.utilities.SeatType;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
@@ -13,30 +14,30 @@ import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import com.example.movies_service.Utilities.auditoriumType;
+import lombok.NoArgsConstructor;
 
-@Entity
 @Data
-@AllArgsConstructor
 @Builder
-public class Theater {
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
+public class Booking {
+	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long theaterID;
-
-    private String name;
-    private String location;
-    private String city;
+	private Long bookingId;
     
-    private auditoriumType auditoriumType;
+    private Long userId;
     
-    @OneToMany(mappedBy = "theater", cascade = CascadeType.ALL)
+    private Long showId;
+    
+    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
     @JsonManagedReference //to aviod recursive response issue occured due to bidirectional mapping 
-    private List<Screen> screens;
+    private List<Seat> seats;
     
-    Theater(){
-    	this.auditoriumType=auditoriumType.Theater;
-    }
+    private Double finalPrice;
     
-   
+    
 }
+
+//follow approach of raw sql in this to manage finalized bookings

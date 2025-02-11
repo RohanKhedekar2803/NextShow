@@ -1,8 +1,10 @@
 package com.example.shows_service.entities;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,13 +26,10 @@ public class Shows {
     private Long showId;
     
 	@Column(nullable = false)
-    private Long movieId;
+    private Long eventId;
     
     @Column(nullable = false)
-    private Long screenId;
-    
-    @Column(nullable = false)
-    private Long theaterId;
+    private Long auditoriumId;
     
     @Column(nullable = false)
     private LocalDateTime startTime;
@@ -39,6 +38,7 @@ public class Shows {
     private LocalDateTime endTime;
     
     @Column(nullable = false)
-    private Double price;
+    @ElementCollection
+    private List<Integer> blockprices;
     
 }

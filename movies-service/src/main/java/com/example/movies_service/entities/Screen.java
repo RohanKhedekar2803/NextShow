@@ -1,5 +1,7 @@
 package com.example.movies_service.entities;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Entity;
@@ -32,10 +34,5 @@ public class Screen {
     
     private int screenNumber;
 
-    private int capacity;
-    
-    private int rows;
-    
-    private int calls;
-    ;
+    private List<List<Integer>> seatsArrangement;
 }

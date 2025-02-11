@@ -36,6 +36,7 @@ public class ShowsController {
         return ResponseEntity.ok(createdShow);
     }
 
+    
     // Get all shows
     @GetMapping
     public ResponseEntity<List<showDTO>> getAllShows() {

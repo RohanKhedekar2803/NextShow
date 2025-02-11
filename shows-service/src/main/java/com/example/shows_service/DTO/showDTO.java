@@ -1,8 +1,10 @@
 package com.example.shows_service.DTO;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,16 +14,20 @@ public class showDTO {
 	
     private Long showId;
     
-    private Long movieId;
+	
+    private Long eventId;
     
-    private Long screenId;
     
-    private Long theaterId;
+    private Long auditoriumId;
+    
     
     private LocalDateTime startTime;
     
+    
     private LocalDateTime endTime;
     
-    private Double price;
+    
+    @ElementCollection
+    private List<Integer> blockprices;
     
 }

@@ -31,7 +31,7 @@ public class ScreenService {
         Screen screen = screenRepository.findById(id)
                 .orElseThrow(() -> new ScreenNotFoundException("Screen with ID " + id + " not found"));
         
-        screen.setCapacity(screenDetails.getCapacity());
+        screen.setSeatsArrangement(screenDetails.getSeatsArrangement());
         
         return screenRepository.save(screen);
     }

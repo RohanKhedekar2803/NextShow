@@ -1,8 +1,10 @@
-package com.example.movies_service.entities;
+package com.example.events_service.entities;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -19,40 +21,37 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Data
 @Entity
-public class Movies{
+public class Event {
+	
 	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long movie_id;
+	private Long eventId;
+    
+    private String event_Type;
 	
     @Column(nullable = false) // This field cannot be null
 	private String title;
-    
-    private String event_Type;
 	
 	private String Description;
 	
 	private String Genre;	
 	
 	@ElementCollection(fetch = FetchType.EAGER)
-	@Column(nullable = false) // This field cannot be null
 	private List<String> Language;	
 	
 	private LocalTime Duration;	
 	
-	@Column(nullable = false) // This field cannot be null
 	private LocalDate ReleaseDate;
 	
 	@OneToOne(fetch = FetchType.EAGER , cascade = CascadeType.ALL)
 	@JoinColumn(name = "meta_data")
-	private MovieMetadata movieMetadata;	
-	
-	public Movies() {
-		this.event_Type="Movie";
-	}
+	@JsonManagedReference
+	private EventMetadata Metadata;
 	
 }

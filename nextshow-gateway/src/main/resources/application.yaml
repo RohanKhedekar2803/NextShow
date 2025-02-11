@@ -31,11 +31,18 @@ spring:
           uri: lb://users-service
           predicates:
             - Path=/users/**
-            
         - id: shows-service
           uri: lb://shows-service
           predicates:
             - Path=/shows/**
+                 
+        - id: events-service
+          uri: lb://events-service
+          predicates:
+            - Path=/eventsAPI/**
+            
+            
+            
 
 server :
   port : 8081
