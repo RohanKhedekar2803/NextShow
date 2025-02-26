@@ -30,7 +30,13 @@ spring:
         - id: user-service
           uri: lb://users-service
           predicates:
-            - Path=/users/**
+            - Path=/user/**
+
+        - id: auth-service
+          uri: lb://users-service
+          predicates:
+            - Path=/auth/**
+
         - id: shows-service
           uri: lb://shows-service
           predicates:
@@ -40,6 +46,11 @@ spring:
           uri: lb://events-service
           predicates:
             - Path=/eventsAPI/**
+            
+        # - id: api-gateway
+        #   uri: lb://api-gateway
+        #   predicates:
+        #     - Path=/gateway/*
             
             
             
