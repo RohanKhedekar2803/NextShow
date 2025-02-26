@@ -14,9 +14,27 @@ spring :
     hibernate:
       ddl-auto: update
     show-sql: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: "1013179941500-37ijcddmm4l7mpe4ve55351cmqkklulk.apps.googleusercontent.com"
+            client-secret: "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"
 
 server :
-  port : 8084
+  port : 8087
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+
+
+DATA :
+  JWT_SECRET : "abcbsjkshdahdhsahdsahdihaidhiosahdoiashdoi2222"
+
 
 eureka:
   client:
