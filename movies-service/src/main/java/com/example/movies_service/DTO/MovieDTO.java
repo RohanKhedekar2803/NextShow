@@ -30,4 +30,5 @@ public class MovieDTO {
     private List<String> cast;
 
     private String posterURL;
+	
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.movies_service.DTO.TheaterDTO;
+import com.example.movies_service.Utilities.auditoriumType;
 import com.example.movies_service.entities.Screen;
 import com.example.movies_service.entities.Theater;
 import com.example.movies_service.exceptions.MissingCompulsoryFeilds;
@@ -43,18 +44,21 @@ public class TheaterServices {
         return convertToTheaterDTO(theater);
     }
 
-    	
-    public TheaterDTO addTheater(TheaterDTO theaterDTO) {
-        if (theaterDTO.getName() == null || theaterDTO.getLocation() == null || theaterDTO.getCity() == null || theaterDTO.getScreens() == null) {
+    public TheaterDTO addTheater(TheaterDTO theaterDTO) throws IllegalArgumentException {
+        if (theaterDTO.getName() == null || theaterDTO.getLocation() == null || theaterDTO.getCity() == null
+                || theaterDTO.getScreens() == null) {
             throw new MissingCompulsoryFeilds("Name, location, city, and screens are compulsory fields.");
         }
 
         List<Screen> screens = theaterDTO.getScreens();
 
+        auditoriumType auditorium = ConvertToEnum(theaterDTO.getAuditoriumType());
+
         Theater savedTheater = Theater.builder()
                 .name(theaterDTO.getName())
                 .location(theaterDTO.getLocation())
                 .city(theaterDTO.getCity())
+                .auditoriumType(auditorium)
                 .build();
 
         // Set the theater for each screen
@@ -66,12 +70,7 @@ public class TheaterServices {
         savedTheater.setScreens(screens);
 
         // Save the theater along with screens (cascade ensures screens are saved)
-        theaterRepository.save(savedTheater);
-        
-        
-
-        
-        
+        savedTheater = theaterRepository.save(savedTheater);
 
         return TheaterDTO.builder()
                 .theaterID(savedTheater.getTheaterID())
@@ -79,38 +78,38 @@ public class TheaterServices {
                 .location(savedTheater.getLocation())
                 .city(savedTheater.getCity())
                 .screens(savedTheater.getScreens())
+                .auditoriumType(String.valueOf(savedTheater.getAuditoriumType()))
                 .build();
     }
 
-    
     public TheaterDTO updateTheater(Long id, Theater t) {
         Theater theater = theaterRepository.findById(id)
                 .orElseThrow(() -> new TheaterNotFoundException("Theater with ID " + id + " not found"));
-        
-        if (theater.getName() == null || theater.getLocation() == null || theater.getCity() == null || theater.getScreens() == null) {
+
+        if (theater.getName() == null || theater.getLocation() == null || theater.getCity() == null
+                || theater.getScreens() == null) {
             throw new MissingCompulsoryFeilds("Name, location, city, and screens are compulsory fields.");
         }
-        
-      List<Screen> scq= screenRepository.findByTheater_TheaterID(id);
-      screenRepository.deleteAll(scq);
-        
+
+        List<Screen> scq = screenRepository.findByTheater_TheaterID(id);
+        screenRepository.deleteAll(scq);
+
         theater.setCity(t.getCity());
         theater.setLocation(t.getLocation());
         theater.setName(t.getName());
         theater.setScreens(t.getScreens());
         theater.setTheaterID(id);
-        
+        theater.setAuditoriumType(t.getAuditoriumType());
+
         List<Screen> screens = theater.getScreens();
         for (Screen screen : screens) {
             screen.setTheater(theater);
         }
-        
+
         screenRepository.saveAll(screens);
         theaterRepository.save(theater);
 
-
-        
-        return convertToTheaterDTO(theater); 
+        return convertToTheaterDTO(theater);
     }
 
     // Delete a theater by ID and return the ID
@@ -148,6 +147,24 @@ public class TheaterServices {
                 .location(theater.getLocation())
                 .city(theater.getCity())
                 .screens(theater.getScreens()) // Directly map screens
+                .auditoriumType(theater.getAuditoriumType().toString())
                 .build();
+    }
+
+    public auditoriumType ConvertToEnum(String audtoriumFromUser) {
+        auditoriumType auditorium;
+        if (audtoriumFromUser.equals("THEATER") || audtoriumFromUser.equals("Theater")
+                || audtoriumFromUser.equals("theater")) {
+            auditorium = auditoriumType.Theater;
+        } else if (audtoriumFromUser.equals("GROUND") || audtoriumFromUser.equals("Ground")
+                || audtoriumFromUser.equals("ground")) {
+            auditorium = auditoriumType.Ground;
+        } else if (audtoriumFromUser.equals("HALL") || audtoriumFromUser.equals("Hall")
+                || audtoriumFromUser.equals("hall")) {
+            auditorium = auditoriumType.Hall;
+        } else {
+            throw new IllegalArgumentException("Not a valid Auditorium Type........");
+        }
+        return auditorium;
     }
 }

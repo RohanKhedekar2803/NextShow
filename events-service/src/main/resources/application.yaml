@@ -14,9 +14,24 @@ spring :
     hibernate:
       ddl-auto: update
     show-sql: true
+  kafka:
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      boostrap-servers: localhost:9092
+    # consumer:
+    #   boostrap-servers: localhost:9092
+    #   group-id: rohan-group-01
+    #   key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    #   value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    #   properties:
+    #     spring:
+    #       json:
+    #         trusted: 
+    #           packages: "*"
 
 server :
-  port : 8089
+  port : 8092 #8092
 
 
 eureka:
@@ -27,3 +42,19 @@ eureka:
 
 DATA:
   JWT_SECRET : "abcbsjkshdahdhsahdsahdihaidhiosahdoiashdoi2222"
+
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+
+  # cache:
+  #   type: redis
+  redis:
+    host: localhost
+    port: 6379
+
+

@@ -81,4 +81,19 @@ public class userService {
 
     }
 
+    // feign client receiver
+    public String retrive_email_from_ID(Long id) {
+        Optional<User> userFromDB = userRepository.findById(id);
+        if (userFromDB.isPresent()) {
+            if (userFromDB.get().getUsername().contains("@gmail.com")) {
+                return userFromDB.get().getUsername();
+            } else {
+                return "NOT A VALID EMAIL_ID";
+            }
+        } else {
+            return "NOT A VALID USER_ID";
+        }
+
+    }
+
 }

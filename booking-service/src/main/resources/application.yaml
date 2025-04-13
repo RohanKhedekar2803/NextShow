@@ -1,0 +1,52 @@
+spring :
+  application : 
+    name : "booking-service"
+  datasource:
+    name: shows-service
+    url: jdbc:mysql://localhost:3306/booking-service
+    username: root
+    password: Rohan@2803
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  kafka:
+    admin:
+      auto-create: true
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      boostrap-servers: localhost:9092
+      properties:
+        metadata.max.age.ms: 10
+    consumer:
+      boostrap-servers: localhost:9092
+      group-id: rohan-group-01
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted: 
+              packages: "*" 
+
+server :
+  port : 8094
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+DATA:
+  JWT_SECRET : "abcbsjkshdahdhsahdsahdihaidhiosahdoiashdoi2222"

@@ -1,11 +1,12 @@
 package com.example.UserService.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,7 +26,7 @@ public class UsersController {
 
     @PostMapping("/register")
     public String registerUser(@RequestParam String username, @RequestParam String password,
-            @RequestParam(defaultValue = "ROLE_USER") List<String> roles) {
+            @RequestParam(defaultValue = "USER") List<String> roles) {
         userService.registerUser(username, password, roles);
         return "User registered successfully!";
     }
@@ -35,6 +36,11 @@ public class UsersController {
         log.info("in login");
         Map<String, String> map = userService.loginUser(username, password);
         return map;
+    }
+
+    @GetMapping("/getuser/{userId}")
+    public ResponseEntity<String> getEmail(@PathVariable Long userId) {
+        return ResponseEntity.ok(userService.retrive_email_from_ID(userId));
     }
 
 }

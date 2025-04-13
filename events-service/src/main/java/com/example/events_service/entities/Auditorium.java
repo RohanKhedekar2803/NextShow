@@ -28,18 +28,20 @@ public class Auditorium {
     private Long auditoriumId;
 
     private String name;
-    
+
     private String location;
-    
+
     private String city;
-    
-    private auditoriumType auditoriumType;
-    
-    @JdbcTypeCode(SqlTypes.JSON) 
+
+    private auditoriumType auditorium;
+
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "json") // Ensure it's a JSON column
     private List<List<Integer>> seatsArrangement;
-    
+
     private Integer numberofblocks;
-    
-    
+
+    Auditorium(String auditorium) {
+        this.auditorium = auditoriumType.Ground;
+    }
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.shows_service.DTO.showDTO;
@@ -36,7 +37,6 @@ public class ShowsController {
         return ResponseEntity.ok(createdShow);
     }
 
-    
     // Get all shows
     @GetMapping
     public ResponseEntity<List<showDTO>> getAllShows() {
@@ -63,5 +63,12 @@ public class ShowsController {
     public ResponseEntity<String> deleteShow(@PathVariable Long showId) {
         showsService.deleteShow(showId);
         return ResponseEntity.ok("Show with ID " + showId + " deleted successfully.");
+    }
+
+    @PostMapping("getvalidityandprice")
+    public ResponseEntity<Long> check_seats_validity_and_get_price(
+            @RequestBody List<com.example.nextshowdto.Seat> seats) {
+        Long SeatPrice = showsService.check_seats_validity_and_get_price(seats);
+        return ResponseEntity.ok(SeatPrice);
     }
 }

@@ -1,0 +1,68 @@
+spring: 
+  application: 
+    name: "payments-and-notification-service"
+  datasource:
+    name: paymentsandnotifictionservice
+    url: jdbc:mysql://localhost:3306/paymentsandnotifictionservice
+    username: root
+    password: Rohan@2803
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  kafka:
+    admin:
+      auto-create: true
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      boostrap-servers: localhost:9092
+      properties:
+        metadata.max.age.ms: 10
+    consumer:
+      boostrap-servers: localhost:9092
+      group-id: rohan-group-01
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: rohankhedekar2803@gmail.com
+    password: miti ikqs gcfa cpdo
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+
+stripe:
+  secret-key: sk_test_51RA7mT4Z4twcya3mhmTNZOtUBzGXFVWOuqrmyMbhU5pw7OFN12yx9MkhGiuQrla2SvkDlTmgbS7E2L14J9BffrPY00UKgpfwJV
+  public-key: pk_test_51RA7mT4Z4twcya3mrTvKjcMRKF96pR94fxDXoaKCjy5M9cEGWA4eY0cIVBPniPZXaz8UeWQVXG0V85MAnQiE1m0900rFMaoYLa
+
+# publish key - pk_test_51RA7mT4Z4twcya3mrTvKjcMRKF96pR94fxDXoaKCjy5M9cEGWA4eY0cIVBPniPZXaz8UeWQVXG0V85MAnQiE1m0900rFMaoYLa
+# secret key  - sk_test_51RA7mT4Z4twcya3mhmTNZOtUBzGXFVWOuqrmyMbhU5pw7OFN12yx9MkhGiuQrla2SvkDlTmgbS7E2L14J9BffrPY00UKgpfwJV
+
+server :
+  port : 8095
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+DATA:
+  JWT_SECRET : "abcbsjkshdahdhsahdsahdihaidhiosahdoiashdoi2222"

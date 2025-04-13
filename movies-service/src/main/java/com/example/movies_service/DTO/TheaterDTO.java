@@ -13,18 +13,19 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class TheaterDTO {
-	
+
     private Long theaterID;
 
     private String name;
     private String location;
     private String city;
-    
+
+    private String auditoriumType;
+
     private List<Screen> screens;
 }

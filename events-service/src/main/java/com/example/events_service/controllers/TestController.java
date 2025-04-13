@@ -12,9 +12,4 @@ public class TestController {
     public String getAllEvents() {
         return "hey";
     }
-
-    @GetMapping("hello")
-    public String getAllEvents1() {
-        return "hello";
-    }
 }

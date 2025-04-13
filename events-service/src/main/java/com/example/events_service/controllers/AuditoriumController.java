@@ -20,10 +20,9 @@ import com.example.events_service.services.AuditoriumService;
 @RestController
 @RequestMapping("eventsAPI/auditoriums")
 public class AuditoriumController {
-	
-	@Autowired
-    private  AuditoriumService auditoriumService;
 
+    @Autowired
+    private AuditoriumService auditoriumService;
 
     @PostMapping
     public ResponseEntity<Auditorium> createAuditorium(@RequestBody Auditorium auditorium) {
@@ -31,18 +30,15 @@ public class AuditoriumController {
         return new ResponseEntity<>(savedAuditorium, HttpStatus.CREATED);
     }
 
-
     @GetMapping
     public ResponseEntity<List<Auditorium>> getAllAuditoriums() {
         return ResponseEntity.ok(auditoriumService.getAllAuditoriums());
     }
 
-
     @GetMapping("/{id}")
     public ResponseEntity<Auditorium> getAuditoriumById(@PathVariable Long id) {
         return ResponseEntity.ok(auditoriumService.getAuditoriumById(id));
     }
-
 
     @PutMapping("/{id}")
     public ResponseEntity<Auditorium> updateAuditorium(
@@ -52,12 +48,16 @@ public class AuditoriumController {
         return ResponseEntity.ok(updated);
     }
 
-
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteAuditorium(@PathVariable Long id) {
         auditoriumService.deleteAuditorium(id);
         return ResponseEntity.ok("Deleted");
     }
-    
-}
 
+    @GetMapping("getseats/{auditoriumId}")
+    public ResponseEntity<List<List<Integer>>> get_seats_arrangement_by_auditorium_id(@PathVariable Long auditoriumId) {
+        return ResponseEntity.ok(auditoriumService.get_seats_arrangement_by_auditorium_id(auditoriumId));
+
+    }
+
+}
