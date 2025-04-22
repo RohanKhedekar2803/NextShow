@@ -1,0 +1,18 @@
+tag and push
+
+docker tag 739801bfe7eb rohankhedekar2803/nextshow-booking-service:latest
+docker tag 0360a97e0db8 rohankhedekar2803/nextshow-payments-notification-service:latest
+docker tag 49b32e006fe9 rohankhedekar2803/nextshow-events-service:latest
+docker tag 11155d23c8d5 rohankhedekar2803/nextshow-shows-service:latest
+docker tag dcf9764aba3e rohankhedekar2803/nextshow-user-service:latest
+docker tag d87b61b678ca rohankhedekar2803/nextshow-gateway-service:latest
+docker tag f0e263124824 rohankhedekar2803/nextshow-discovery-service:latest
+
+
+docker push rohankhedekar2803/nextshow-booking-service:latest
+docker push rohankhedekar2803/nextshow-payments-notification-service:latest
+docker push rohankhedekar2803/nextshow-events-service:latest
+docker push rohankhedekar2803/nextshow-shows-service:latest
+docker push rohankhedekar2803/nextshow-user-service:latest
+docker push rohankhedekar2803/nextshow-gateway-service:latest
+docker push rohankhedekar2803/nextshow-discovery-service:latest
