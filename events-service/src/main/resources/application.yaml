@@ -3,7 +3,7 @@ spring :
     name : events-service
   datasource:
     name: events-service
-    url: jdbc:mysql://localhost:3306/events-service
+    url: jdbc:mysql://mysql:3306/events-service
     username: root
     password: Rohan@2803
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -18,9 +18,9 @@ spring :
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-      boostrap-servers: localhost:9092
+      bootstrap-servers: kafka-server:9092
     # consumer:
-    #   boostrap-servers: localhost:9092
+    #   bootstrap-servers: localhost:9092
     #   group-id: rohan-group-01
     #   key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
     #   value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
@@ -31,13 +31,20 @@ spring :
     #           packages: "*"
 
 server :
-  port : 8092 #8092
+  port : 8082 #8092
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
 
 
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://discovery-service:8761/eureka/
 
 
 DATA:
@@ -54,7 +61,7 @@ springdoc:
   # cache:
   #   type: redis
   redis:
-    host: localhost
+    host: redis
     port: 6379
 
 

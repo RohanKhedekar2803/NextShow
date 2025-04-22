@@ -3,9 +3,9 @@ spring :
     name : "booking-service"
   datasource:
     name: shows-service
-    url: jdbc:mysql://localhost:3306/booking-service
+    url: jdbc:mysql://mysql:3306/booking-service
     username: root
-    password: Rohan@2803
+    password: Rohan@2803  
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     properties:
@@ -15,32 +15,31 @@ spring :
       ddl-auto: update
     show-sql: true
   kafka:
+    bootstrap-servers: kafka-server:9092
     admin:
+      bootstrap-servers: kafka-server:9092
       auto-create: true
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-      boostrap-servers: localhost:9092
-      properties:
-        metadata.max.age.ms: 10
     consumer:
-      boostrap-servers: localhost:9092
+      bootstrap-servers: kafka-server:9092
       group-id: rohan-group-01
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring:
           json:
-            trusted: 
-              packages: "*" 
+            trusted:
+              packages: "*"
 
 server :
-  port : 8094
+  port : 8081
 
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://discovery-service:8761/eureka
 
 springdoc:
   api-docs:
@@ -50,3 +49,15 @@ springdoc:
 
 DATA:
   JWT_SECRET : "abcbsjkshdahdhsahdsahdihaidhiosahdoiashdoi2222"
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+
+feign:
+  client:
+    config:
+      default:
+        loggerLevel : full

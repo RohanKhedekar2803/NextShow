@@ -3,7 +3,7 @@ spring :
     name : users-service
   datasource:
     name: users-service
-    url: jdbc:mysql://localhost:3306/users-service
+    url: jdbc:mysql://mysql:3306/users-service
     username: root
     password: Rohan@2803
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -23,13 +23,20 @@ spring :
             client-secret: "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"
 
 server :
-  port : 8091
+  port : 8085
 
 logging:
   level:
     org:
       springframework:
         security: DEBUG
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
 
 
 DATA :
@@ -39,7 +46,7 @@ DATA :
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://discovery-service:8761/eureka/
 
 springdoc:
   api-docs:

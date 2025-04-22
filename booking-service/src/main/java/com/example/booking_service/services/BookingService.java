@@ -131,7 +131,7 @@ public class BookingService {
                 String.valueOf(userId) + String.valueOf(showId) + seatRequestdto.get(0).getSeatId(),
                 "Ready for Payment"));
 
-        System.out.println("seats booking came here");
+        System.out.println("cd ..re");
         booking.setSeats(seats);
         return entityToDTO(booking);
     }

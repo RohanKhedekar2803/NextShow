@@ -10,6 +10,7 @@
     <name>nextshow-dto</name>
 
     <dependencies>
+
         <!-- Lombok for DTO convenience -->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -33,4 +34,11 @@
             </dependency>
 
     </dependencies>
+  <distributionManagement>
+		<repository>
+			<id>github</id>
+			<name>GitHub OWNER Apache Maven Packages</name>
+			<url>https://maven.pkg.github.com/rohankhedekar2803/nextshow</url>
+		</repository>
+	</distributionManagement>
 </project>

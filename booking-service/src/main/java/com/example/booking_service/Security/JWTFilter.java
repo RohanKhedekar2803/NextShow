@@ -11,13 +11,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 
 @Component
 public class JWTFilter extends OncePerRequestFilter {
@@ -44,12 +45,15 @@ public class JWTFilter extends OncePerRequestFilter {
                         .collect(Collectors.toList());
 
                 // Create authentication token
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, null,
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, token,
                         authorities);
 
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authToken);
+
+                RequestContextHolder.getRequestAttributes().setAttribute("jwt", token, RequestAttributes.SCOPE_REQUEST);
+
                 System.out.println("token saved is -->" + authToken.toString());
             }
         }

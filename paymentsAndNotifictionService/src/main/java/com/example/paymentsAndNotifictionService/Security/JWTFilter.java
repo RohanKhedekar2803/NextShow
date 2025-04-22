@@ -42,7 +42,7 @@ public class JWTFilter extends OncePerRequestFilter {
                         .collect(Collectors.toList());
 
                 // Create authentication token
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, null,
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, token,
                         authorities);
 
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

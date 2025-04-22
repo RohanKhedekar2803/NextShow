@@ -3,7 +3,7 @@ spring:
     name: "payments-and-notification-service"
   datasource:
     name: paymentsandnotifictionservice
-    url: jdbc:mysql://localhost:3306/paymentsandnotifictionservice
+    url: jdbc:mysql://mysql:3306/payments-and-notification-service
     username: root
     password: Rohan@2803
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -20,11 +20,11 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-      boostrap-servers: localhost:9092
+      bootstrap-servers: kafka-server:9092
       properties:
         metadata.max.age.ms: 10
     consumer:
-      boostrap-servers: localhost:9092
+      bootstrap-servers: kafka-server:9092
       group-id: rohan-group-01
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
@@ -51,12 +51,12 @@ stripe:
 # secret key  - sk_test_51RA7mT4Z4twcya3mhmTNZOtUBzGXFVWOuqrmyMbhU5pw7OFN12yx9MkhGiuQrla2SvkDlTmgbS7E2L14J9BffrPY00UKgpfwJV
 
 server :
-  port : 8095
+  port : 8084
 
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://discovery-service:8761/eureka/
 
 springdoc:
   api-docs:
@@ -66,3 +66,10 @@ springdoc:
 
 DATA:
   JWT_SECRET : "abcbsjkshdahdhsahdsahdihaidhiosahdoiashdoi2222"
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

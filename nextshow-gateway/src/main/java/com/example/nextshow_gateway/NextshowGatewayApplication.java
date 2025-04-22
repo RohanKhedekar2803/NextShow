@@ -9,5 +9,4 @@ public class NextshowGatewayApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(NextshowGatewayApplication.class, args);
 	}
-
 }
