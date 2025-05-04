@@ -66,7 +66,7 @@ public class GoogleAuthController {
             params.add("code", code);
             params.add("client_id", clientId);
             params.add("client_secret", clientSecret);
-            params.add("redirect_uri", "http://localhost:8081/auth/google/callback"); // chnaged here older 8087
+            params.add("redirect_uri", "http://localhost:8080/auth/google/callback"); // chnaged here older 8087
             params.add("grant_type", "authorization_code");
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
