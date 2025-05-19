@@ -232,4 +232,8 @@ public class ShowsService {
 		System.out.println(res);
 		return res.getBody();
 	}
+
+	public List<Shows> getShowsByAuditoriumById(Long auditoriumId) {
+		return showsRepository.findByAuditoriumId(auditoriumId);
+	}
 }

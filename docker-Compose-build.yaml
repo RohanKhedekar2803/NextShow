@@ -4,12 +4,23 @@ networks:
   nextshow-network:
     driver: bridge
 
-
 volumes:
   mysql_data:
+  maven_repo:
 
 services:
-  # Infrastructure Services
+  # # Build DTO
+  # dto-build:
+  #   build:
+  #     context: ./nextshow-dto
+  #   container_name: dto-build
+  #   command: mvn clean install -DskipTests
+  #   volumes:
+  #     - maven_repo:/root/.m2
+  #   networks:
+  #     - nextshow-network
+
+  # # Infrastructure Services
   zookeeper:
     image: wurstmeister/zookeeper
     container_name: zookeeper
@@ -86,6 +97,8 @@ services:
       interval: 15s
       timeout: 5s
       retries: 15
+    volumes:
+      - maven_repo:/root/.m2
     networks:
       - nextshow-network
 
@@ -100,6 +113,8 @@ services:
         condition: service_healthy
       mysql:
         condition: service_healthy
+    volumes:
+      - maven_repo:/root/.m2
     networks:
       - nextshow-network
 
@@ -118,10 +133,11 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+    volumes:
+      - maven_repo:/root/.m2
     networks:
       - nextshow-network
 
-  # Commented services
   events-service:
     build:
       context: ./events-service
@@ -135,40 +151,46 @@ services:
         condition: service_healthy
       kafka-server:
         condition: service_healthy
+    volumes:
+      - maven_repo:/root/.m2
     networks:
       - nextshow-network
 
-  shows-service:
-    build:
-      context: ./shows-service
-    container_name: shows-service
-    ports:
-      - "8083:8083"
-    depends_on:
-      discovery-service:
-        condition: service_healthy
-      mysql:
-        condition: service_healthy
-      kafka-server:
-        condition: service_healthy
-    networks:
-      - nextshow-network
+  # shows-service:
+  #   build:
+  #     context: ./shows-service
+  #   container_name: shows-service
+  #   ports:
+  #     - "8083:8083"
+  #   depends_on:
+  #     discovery-service:
+  #       condition: service_healthy
+  #     mysql:
+  #       condition: service_healthy
+  #     kafka-server:
+  #       condition: service_healthy
+  #   volumes:
+  #     - maven_repo:/root/.m2
+  #   networks:
+  #     - nextshow-network
 
-  payments-notification-service:
-    build:
-      context: ./paymentsAndNotifictionService
-    container_name: payments-notification-service
-    ports:
-      - "8084:8084"
-    depends_on:
-      discovery-service:
-        condition: service_healthy
-      mysql:
-        condition: service_healthy
-      kafka-server:
-        condition: service_healthy
-    networks:
-      - nextshow-network
+  # payments-notification-service:
+  #   build:
+  #     context: ./paymentsAndNotifictionService
+  #   container_name: payments-notification-service
+  #   ports:
+  #     - "8084:8084"
+  #   depends_on:
+  #     discovery-service:
+  #       condition: service_healthy
+  #     mysql:
+  #       condition: service_healthy
+  #     kafka-server:
+  #       condition: service_healthy
+  #   volumes:
+  #     - maven_repo:/root/.m2
+  #   networks:
+  #     - nextshow-network
 
   user-service:
     build:
@@ -181,6 +203,7 @@ services:
         condition: service_healthy
       mysql:
         condition: service_healthy
+    volumes:
+      - maven_repo:/root/.m2
     networks:
       - nextshow-network
-

@@ -19,4 +19,6 @@ public interface ShowRepository extends CrudRepository<Shows, Long> {
 	@Query("SELECT s.auditoriumId FROM Shows s WHERE s.showId = :showId")
 	Long findAuditoriumIdByShowId(@Param("showId") Long showId);
 
+	List<Shows> findByAuditoriumId(Long auditoriumId);
+
 }

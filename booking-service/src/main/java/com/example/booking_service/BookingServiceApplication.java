@@ -6,7 +6,9 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
+@CrossOrigin(origins = "*")
 @EnableFeignClients
 @SpringBootApplication
 public class BookingServiceApplication {

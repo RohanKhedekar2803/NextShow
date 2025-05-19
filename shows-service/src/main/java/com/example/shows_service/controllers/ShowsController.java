@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+import com.example.shows_service.entities.*;
 import com.example.shows_service.DTO.showDTO;
 import com.example.shows_service.services.ShowsService;
 
@@ -49,6 +49,12 @@ public class ShowsController {
     public ResponseEntity<showDTO> getShowById(@PathVariable Long showId) {
         showDTO show = showsService.getShowById(showId);
         return ResponseEntity.ok(show);
+    }
+
+    @GetMapping("/{showId}")
+    public ResponseEntity<List<Shows>> getShowByAuditoriumId(@PathVariable Long AuditoriumId) {
+        List<Shows> shows = showsService.getShowsByAuditoriumById(AuditoriumId);
+        return ResponseEntity.ok(shows);
     }
 
     // Update a show
