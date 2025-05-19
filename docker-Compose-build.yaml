@@ -9,18 +9,18 @@ volumes:
   maven_repo:
 
 services:
-  # # Build DTO
-  # dto-build:
-  #   build:
-  #     context: ./nextshow-dto
-  #   container_name: dto-build
-  #   command: mvn clean install -DskipTests
-  #   volumes:
-  #     - maven_repo:/root/.m2
-  #   networks:
-  #     - nextshow-network
+#   # Build DTO
+#   dto-build:
+#     build:
+#       context: ./nextshow-dto
+#     container_name: dto-build
+#     command: mvn clean install -DskipTests
+#     volumes:
+#       - maven_repo:/root/.m2
+#     networks:
+#       - nextshow-network
 
-  # # Infrastructure Services
+  # Infrastructure Services
   zookeeper:
     image: wurstmeister/zookeeper
     container_name: zookeeper
@@ -156,41 +156,41 @@ services:
     networks:
       - nextshow-network
 
-  # shows-service:
-  #   build:
-  #     context: ./shows-service
-  #   container_name: shows-service
-  #   ports:
-  #     - "8083:8083"
-  #   depends_on:
-  #     discovery-service:
-  #       condition: service_healthy
-  #     mysql:
-  #       condition: service_healthy
-  #     kafka-server:
-  #       condition: service_healthy
-  #   volumes:
-  #     - maven_repo:/root/.m2
-  #   networks:
-  #     - nextshow-network
+  shows-service:
+    build:
+      context: ./shows-service
+    container_name: shows-service
+    ports:
+      - "8083:8083"
+    depends_on:
+      discovery-service:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+      kafka-server:
+        condition: service_healthy
+    volumes:
+      - maven_repo:/root/.m2
+    networks:
+      - nextshow-network
 
-  # payments-notification-service:
-  #   build:
-  #     context: ./paymentsAndNotifictionService
-  #   container_name: payments-notification-service
-  #   ports:
-  #     - "8084:8084"
-  #   depends_on:
-  #     discovery-service:
-  #       condition: service_healthy
-  #     mysql:
-  #       condition: service_healthy
-  #     kafka-server:
-  #       condition: service_healthy
-  #   volumes:
-  #     - maven_repo:/root/.m2
-  #   networks:
-  #     - nextshow-network
+  payments-notification-service:
+    build:
+      context: ./paymentsAndNotifictionService
+    container_name: payments-notification-service
+    ports:
+      - "8084:8084"
+    depends_on:
+      discovery-service:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
+      kafka-server:
+        condition: service_healthy
+    volumes:
+      - maven_repo:/root/.m2
+    networks:
+      - nextshow-network
 
   user-service:
     build:

@@ -51,7 +51,7 @@ public class ShowsController {
         return ResponseEntity.ok(show);
     }
 
-    @GetMapping("/{showId}")
+    @GetMapping("/auditorium/{AuditoriumId}")
     public ResponseEntity<List<Shows>> getShowByAuditoriumId(@PathVariable Long AuditoriumId) {
         List<Shows> shows = showsService.getShowsByAuditoriumById(AuditoriumId);
         return ResponseEntity.ok(shows);

@@ -38,7 +38,7 @@ public class JWTService {
         return Jwts.builder()
                 .setSubject(username) // Set the username
                 .setIssuedAt(new Date()) // Set issue time
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // Expiry: 1 hour
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24)) // Expiry: 1 hour
                 .signWith(SECRET_KEY) // Sign with generated key
                 .addClaims(Map.of("roles", roles)) // ✅ Add roles claim
                 .compact();
