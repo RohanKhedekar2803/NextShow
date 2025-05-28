@@ -51,10 +51,16 @@ public class BookingService {
 
     @Transactional
     public BookingDTO createBooking(Long userId, Long showId, List<com.example.nextshowdto.Seat> seatRequestdto) {
-        BookingStatusResponse saved_status = bookingStatusRepository.save(new BookingStatusResponse(
-                String.valueOf(userId) + String.valueOf(showId) + seatRequestdto.get(0).getSeatId(), "In Progress"));
 
-        System.out.println("Saved Booking Status: " + saved_status);
+        for (com.example.nextshowdto.Seat seat : seatRequestdto) {
+
+            BookingStatusResponse saved_status = bookingStatusRepository.save(new BookingStatusResponse(
+                    String.valueOf(userId) + String.valueOf(showId) + seat.getSeatId(),
+                    "In Progress"));
+            System.out.println("Saved Booking Status: " + saved_status);
+
+        }
+
         List<com.example.booking_service.entities.Seat> seatRequests = convertToCompatibleBookingDTO(seatRequestdto);
 
         List<String> seatIds = new ArrayList<>();
@@ -124,12 +130,21 @@ public class BookingService {
         List<Seat> seats = (List<Seat>) seatRepository.saveAll(finalSeats); // Save seats after assigning to booking
 
         // <!-- API CALL TO FOR PAYMENT AND NOTIFY SEVRVICE --!>
-        PaymentAndNotify(userId, showId, seatRequestdto, Price);
+        PaymentAndNotify(userId, showId, seatRequestdto, seats.get(0).getSeatPrice() * seats.size());
         //
 
         bookingStatusRepository.save(new BookingStatusResponse(
                 String.valueOf(userId) + String.valueOf(showId) + seatRequestdto.get(0).getSeatId(),
                 "Ready for Payment"));
+
+        // cganining status for tracking
+        for (com.example.nextshowdto.Seat seat : seatRequestdto) {
+
+            bookingStatusRepository.save(new BookingStatusResponse(
+                    String.valueOf(userId) + String.valueOf(showId) + seat.getSeatId(),
+                    "Ready for Payment"));
+
+        }
 
         System.out.println("cd ..re");
         booking.setSeats(seats);
@@ -137,25 +152,19 @@ public class BookingService {
     }
 
     private void PaymentAndNotify(Long userId, Long showId, List<com.example.nextshowdto.Seat> seatRequestdto,
-            Double Price) {
+            Double seatPrice) {
         // call
         com.example.nextshowdto.PaymnentsServiceBookingObject obj = new com.example.nextshowdto.PaymnentsServiceBookingObject(
                 userId, showId,
                 seatRequestdto,
-                Price);
+                seatPrice);
         kafkjKafkaMessagePublisher.AddPaymnentsServiceBooking("payment-and-notifications", obj);
     }
 
-    public String getBookingStatusUpdates(String userId, String showid, String firstseat) {
-        Optional<BookingStatusResponse> res = bookingStatusRepository.findById(userId + showid + firstseat);
-        if (res.isPresent()) {
-            return res.get().getStatus();
-        }
-        return "Bookng_status_not_found";
-    }
-
     public String getBookingStatus(String userId, String showId, String firstSeat) {
-        Optional<BookingStatusResponse> res = bookingStatusRepository.findById(userId + showId + firstSeat);
+        String temp = userId + showId + firstSeat;
+        Optional<BookingStatusResponse> res = bookingStatusRepository.findByBookingid(temp);
+        System.out.println("checking booking status here. " + temp);
         if (res.isPresent()) {
             return res.get().getStatus();
         } else {
@@ -225,6 +234,86 @@ public class BookingService {
             throw new IllegalArgumentException("request to events service rejected maybe service down");
 
         }
+    }
+
+    // check if ticket is under processing or not
+    public Boolean check_availability_validity(String userId, String showid, List<com.example.nextshowdto.Seat> seats) {
+        try {
+            for (com.example.nextshowdto.Seat seat : seats) {
+                String temp = userId + showid + seat.getSeatId();
+                Optional<BookingStatusResponse> res = bookingStatusRepository.findByBookingid(temp);
+                System.out.println("Ticket you are trying to book is alredy booked " + temp);
+                if (res.isPresent()) {
+                    return false;
+                }
+            }
+
+            return true;
+
+        } catch (Exception e) {
+            return false;
+
+        }
+    }
+
+    // controller to get booking status of all seats of show
+    public List<String> getNegateShowBookingStatus(String showid) {
+        List<BookingStatusResponse> results = bookingStatusRepository.findByBookingidContaining(showid);
+        return results.stream()
+                .map(BookingStatusResponse::getBookingid)
+                .map(id -> id.substring(id.indexOf('S'))) // Keep from 'S' onwards
+                .collect(Collectors.toList());
+
+    }
+
+    public String getBookingStatusUpdates(String userId, String showid, String firstseat) {
+        String temp = userId + showid + firstseat;
+        Optional<BookingStatusResponse> res = bookingStatusRepository.findByBookingid(temp);
+        System.out.println("checking booking status here... " + temp);
+
+        if (res.isPresent()) {
+            return res.get().getStatus();
+        }
+        return "Bookng_status_not_found";
+    }
+
+    public String UpdateBookingStatusBooked(String userId, String showid, List<String> seats) {
+
+        for (String seat : seats) {
+            String temp = userId + showid + seat;
+            Optional<BookingStatusResponse> res = bookingStatusRepository.findByBookingid(temp);
+            System.out.println("checking booking status to update for" + temp);
+
+            if (res.isPresent()) {
+                res.get().setStatus("Payment Completed");
+                bookingStatusRepository.save(res.get());
+                System.out.println("updated booking status for" + temp + "to Payment Completed");
+            } else {
+                return "Bookng_status_not_found";
+            }
+        }
+
+        return " status updated";
+
+    }
+
+    public String UpdateBookingStatusCancelled(String userId, String showid, List<String> seats) {
+        for (String seat : seats) {
+            String temp = userId + showid + seat;
+            Optional<BookingStatusResponse> res = bookingStatusRepository.findByBookingid(temp);
+            System.out.println("checking booking status to update for" + temp);
+
+            if (res.isPresent()) {
+                res.get().setStatus("Booking_Cancelled");
+                bookingStatusRepository.save(res.get());
+                System.out.println("updated booking status for" + temp + "to Booking_Cancelled");
+            } else {
+                return "Bookng_status_not_found";
+            }
+        }
+
+        return "Could not update status";
+
     }
 
 }

@@ -23,7 +23,7 @@ public class EmailService {
         String email = retrive_email_from_userservice(obj.getUserId());
 
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("rohankhedekar2803@gmail.com"); // same as your spring.mail.username
+        message.setFrom("khedekarrohan35@gmail.com"); // same as your spring.mail.username
         message.setTo(email);
         message.setSubject("Booking Confirmation via Nextshow");
         message.setText("Thanks for booking via next show \n Your booking show is " + obj.getShowId()

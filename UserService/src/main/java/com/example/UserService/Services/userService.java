@@ -1,6 +1,7 @@
 package com.example.UserService.Services;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -72,11 +73,15 @@ public class userService {
         if (userfromDB.isPresent()) {
             Role = userfromDB.get().getRoles();
         }
-
-        if (authentication.isAuthenticated()) {
-            return Map.of("JWT-TOKEN", jwtService.generateToken(username, Role));
+        Map<String, String> mp = new HashMap<>();
+        if (authentication.isAuthenticated() && userfromDB.isPresent()) {
+            mp.put("JWT-TOKEN", jwtService.generateToken(username, Role));
+            mp.put("username", userfromDB.get().getUsername());
+            mp.put("user_id", userfromDB.get().getId().toString());
+            return mp;
         } else {
-            return Map.of("error", "Invalid credentials");
+            mp.put("error", "Invalid credentials");
+            return Map.of();
         }
 
     }

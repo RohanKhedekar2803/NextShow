@@ -29,7 +29,7 @@ public class KafkaMessageConsumer {
     public void consume(BookingDTO bookingDTO) {
 
         try {
-            System.out.println("consumsed at topic [" + "rohan4" + "] msg ---> \n"
+            System.out.println("consumsed booking at topic [" + "events-*" + "] msg ---> \n"
                     + bookingService.createBooking(bookingDTO.getUserId(), bookingDTO.getShowId(),
                             bookingDTO.getSeats()));
 

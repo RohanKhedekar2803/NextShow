@@ -68,6 +68,11 @@ spring:
           predicates:
             - Path=/Bookings/**
 
+        - id: payments-and-notification-service
+          uri: lb://payments-and-notification-service
+          predicates:
+            - Path=/payment-checkout/**
+
 eureka:
   client:
     service-url:

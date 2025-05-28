@@ -25,10 +25,12 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long PaymentId;
     String user;
+    String show;
     Long Price;
 
     List<String> seats;
     String eventName;
     LocalDateTime dateTime;
     String Payment_status;
+    String paymentLink;
 }

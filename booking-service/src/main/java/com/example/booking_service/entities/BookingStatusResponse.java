@@ -1,5 +1,9 @@
 package com.example.booking_service.entities;
 
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,4 +23,11 @@ public class BookingStatusResponse {
 
     private String status;
 
+    @CreationTimestamp
+    private LocalDateTime timestamp;
+
+    public BookingStatusResponse(String bookingid, String status) {
+        this.bookingid = bookingid;
+        this.status = status;
+    }
 }

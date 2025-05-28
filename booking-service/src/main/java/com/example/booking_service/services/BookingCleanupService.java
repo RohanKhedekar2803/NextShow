@@ -10,10 +10,12 @@ import org.springframework.stereotype.Service;
 
 import com.example.booking_service.entities.Booking;
 import com.example.booking_service.entities.BookingArchive;
+import com.example.booking_service.entities.BookingStatusResponse;
 import com.example.booking_service.entities.Seat;
 import com.example.booking_service.entities.SeatArchive;
 import com.example.booking_service.repositories.BookingArchiveRepository;
 import com.example.booking_service.repositories.BookingRepository;
+import com.example.booking_service.repositories.BookingStatusRepository;
 import com.example.booking_service.repositories.SeatArchiveRepository;
 import com.example.booking_service.utilities.BookingStatus;
 
@@ -30,6 +32,9 @@ public class BookingCleanupService {
 
     @Autowired
     private SeatArchiveRepository seatArchiveRepository;
+
+    @Autowired
+    private BookingStatusRepository bookingStatusRepository;
 
     @Transactional
     @Scheduled(cron = "0 0 2 * * ?") // Runs every day at 2 AM
@@ -67,5 +72,20 @@ public class BookingCleanupService {
             bookingRepository.delete(booking);
         }
         System.out.println("✅ Archived " + completedBookings.size() + " bookings.");
+    }
+
+    @Scheduled(fixedRate = 10 * 60 * 1000)
+    @Transactional
+    public void cleanupOldPendingBookings() {
+        LocalDateTime threshold = LocalDateTime.now().minusMinutes(5);
+
+        // Find all "Ready for Payment" bookings older than 5 minutes
+        List<BookingStatusResponse> expiredBookings = bookingStatusRepository
+                .findByStatusAndTimestampBefore("Ready for Payment", threshold);
+
+        if (!expiredBookings.isEmpty()) {
+            bookingStatusRepository.deleteAll(expiredBookings);
+            System.out.println("⏳ Cleaned up " + expiredBookings.size() + " stale booking(s)");
+        }
     }
 }

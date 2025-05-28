@@ -1,3 +1,7 @@
+
+docker build latest image -
+docker build -t nextshow/users-service .
+
 tag and push
 
 docker tag 739801bfe7eb rohankhedekar2803/nextshow-booking-service:latest
@@ -16,3 +20,36 @@ docker push rohankhedekar2803/nextshow-shows-service:latest
 docker push rohankhedekar2803/nextshow-user-service:latest
 docker push rohankhedekar2803/nextshow-gateway-service:latest
 docker push rohankhedekar2803/nextshow-discovery-service:latest
+
+
+
+----------------------------------------------------
+https://accounts.google.com/o/oauth2/v2/auth?client_id=1013179941500-37ijcddmm4l7mpe4ve55351cmqkklulk.apps.googleusercontent.com&redirect_uri=http://localhost:8080/auth/google/callback&response_type=code&scope=openid email profile
+----------------------------------------------------
+
+---> docker compose -f docker-compose-build.yaml build --no-cache
+while running this comment non reqd images
+
+
+--->docker compose -f docker-compose-build.yaml up
+uncomment everything
+
+backend
+fronend
+in events service add start time
+
+
+
+
+---------------------------
+issues backend may come 
+1.  if that issue comes for dto-6 then recreate token classic whith pckage and repo all rights 
+2. 
+
+
+-------------------------
+todo-
+actual booking section is only remaining and pauyemnts
+
+imp -
+in backed changes are not pushed those are commited to local repo to avoiiud error of secret expose at pushing
