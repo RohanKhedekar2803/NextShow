@@ -1,7 +1,9 @@
 NextShow
 NextShow is a microservices-based event booking platform designed for hosting and managing events such as comic shows, sports events, and more. The system allows users to seamlessly browse upcoming events, check real-time seat availability, book tickets, and make secure payments — all within a scalable and distributed architecture.
 
-demo - https://youtu.be/VFzqAiExRNc
+Checkout Demo video here- https://youtu.be/VFzqAiExRNc
+
+
 🔧 Key Features
 Federated Authentication: Integrated Google OAuth 2.0 for user login, with custom JWT tokens issued for secure and stateless internal authorization across services.
 
