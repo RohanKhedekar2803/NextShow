@@ -29,7 +29,7 @@ public class SecurityConfig {
 
                                 // 🔹 PUBLIC ROUTES (No Authentication Required)
                                 .authorizeHttpRequests(auth -> auth
-                                                .requestMatchers("/eventsAPI/auditoriums/getseats/**",
+                                                .requestMatchers("/eventsAPI/**",
                                                                 "/swagger-ui.html/**",
                                                                 "/swagger-ui/**", "/v3/api-docs/**")
                                                 .permitAll()

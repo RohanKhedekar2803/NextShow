@@ -1,5 +1,15 @@
 # Stage 1: Build the application using Maven with JDK 21
 FROM maven:3.9.6-eclipse-temurin-21 AS build
+
+# 🔑 declare build args
+ARG GITHUB_USERNAME
+ARG GITHUB_TOKEN
+
+# 🔑 expose them as env so Maven can read ${env.*}
+ENV GITHUB_USERNAME=${GITHUB_USERNAME}
+ENV GITHUB_TOKEN=${GITHUB_TOKEN}
+
+
 WORKDIR /build
 
 # Copy the Maven settings and project files

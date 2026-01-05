@@ -3,9 +3,9 @@ spring :
     name : "booking-service"
   datasource:
     name: shows-service
-    url: jdbc:mysql://mysql:3306/booking-service
+    url: jdbc:mysql://mysql:${MYSQL_CONTAINER_PORT}/booking-service
     username: root
-    password: Rohan@2803  
+    password: ${MYSQL_ROOT_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     properties:
@@ -15,15 +15,15 @@ spring :
       ddl-auto: update
     show-sql: true
   kafka:
-    bootstrap-servers: kafka-server:9092
+    bootstrap-servers: ${KAFKA_HOST}:${KAFKA_PORT}
     admin:
-      bootstrap-servers: kafka-server:9092
+      bootstrap-servers: ${KAFKA_HOST}:${KAFKA_PORT}
       auto-create: true
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     consumer:
-      bootstrap-servers: kafka-server:9092
+      bootstrap-servers: ${KAFKA_HOST}:${KAFKA_PORT}
       group-id: rohan-group-01
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
@@ -34,12 +34,12 @@ spring :
               packages: "*"
 
 server :
-  port : 8081
+  port : ${SERVER_PORT}
 
 eureka:
   client:
     service-url:
-      defaultZone: http://discovery-service:8761/eureka
+      defaultZone: http://discovery-service:${DISCOVERY_PORT}/eureka
 
 springdoc:
   api-docs:
@@ -48,7 +48,7 @@ springdoc:
     path: /swagger-ui.html
 
 DATA:
-  JWT_SECRET : "abcbsjkshdahdhsahdsahdihaidhiosahdoiashdoi2222"
+  JWT_SECRET : ${JWT_SECRET}
 
 logging:
   level:

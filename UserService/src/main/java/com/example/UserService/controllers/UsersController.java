@@ -3,6 +3,7 @@ package com.example.UserService.controllers;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+import com.example.UserService.Entities.User;
 import com.example.UserService.Services.userService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -42,5 +43,13 @@ public class UsersController {
     public ResponseEntity<String> getEmail(@PathVariable Long userId) {
         return ResponseEntity.ok(userService.retrive_email_from_ID(userId));
     }
+
+
+    @GetMapping("/getuserbymail/{username}")
+    public ResponseEntity<User> getUser(@PathVariable String username) {
+        User user = userService.getUserByUsername(username);
+        return ResponseEntity.ok(user);
+    }
+
 
 }

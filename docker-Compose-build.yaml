@@ -20,12 +20,13 @@ services:
 #     networks:
 #       - nextshow-network
 
-  # Infrastructure Services
+  # ---------- Infrastructure Services ----------
+
   zookeeper:
     image: wurstmeister/zookeeper
     container_name: zookeeper
     ports:
-      - "2181:2181"
+      - "${ZOOKEEPER_PORT}:${ZOOKEEPER_PORT}"
     networks:
       - nextshow-network
 
@@ -33,17 +34,17 @@ services:
     image: wurstmeister/kafka
     container_name: kafka-server
     ports:
-      - "9092:9092"
+      - "${KAFKA_PORT}:${KAFKA_PORT}"
     environment:
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-server:9092
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:${ZOOKEEPER_PORT}
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://${KAFKA_HOST}:${KAFKA_PORT}
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:${KAFKA_PORT}
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
     depends_on:
       - zookeeper
     healthcheck:
-      test: ["CMD", "bash", "-c", "echo > /dev/tcp/localhost/9092"]
+      test: ["CMD", "bash", "-c", "echo > /dev/tcp/${KAFKA_HOST}/${KAFKA_PORT}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -54,9 +55,9 @@ services:
     image: redis:latest
     container_name: redis
     ports:
-      - "6379:6379"
+      - "${REDIS_PORT}:${REDIS_PORT}"
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD", "redis-cli", "-h", "redis", "-p", "${REDIS_PORT}", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -68,32 +69,38 @@ services:
     container_name: mysql
     restart: always
     ports:
-      - "3307:3306"
+      - "${MYSQL_EXPOSED_PORT}:${MYSQL_CONTAINER_PORT}"
     environment:
-      MYSQL_ROOT_PASSWORD: Rohan@2803
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql
       - ./init-multiple-dbs.sql:/docker-entrypoint-initdb.d/init-multiple-dbs.sql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-pRohan@2803"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "mysql", "-p${MYSQL_ROOT_PASSWORD}"]
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
       - nextshow-network
 
-  # Microservices
+  # ---------- Microservices ----------
+
   discovery-service:
     build:
       context: ./nextshow-discovery-client
+      args:
+        GITHUB_USERNAME: ${GITHUB_USERNAME}
+        GITHUB_TOKEN: ${GITHUB_TOKEN}
     container_name: discovery-service
     ports:
-      - "8761:8761"
+      - "${DISCOVERY_PORT}:${DISCOVERY_PORT}"
+    environment:
+      SERVER_PORT: ${DISCOVERY_PORT}
     depends_on:
       mysql:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8761"]
+      test: ["CMD", "curl", "-f", "http://discovery-service:${DISCOVERY_PORT}"]
       interval: 15s
       timeout: 5s
       retries: 15
@@ -105,9 +112,18 @@ services:
   gateway-service:
     build:
       context: ./nextshow-gateway
+      args:
+        GITHUB_USERNAME: ${GITHUB_USERNAME}
+        GITHUB_TOKEN: ${GITHUB_TOKEN}
     container_name: gateway-service
     ports:
-      - "8080:8080"
+      - "${GATEWAY_PORT}:${GATEWAY_PORT}"
+    environment:
+      SERVER_PORT: ${GATEWAY_PORT}
+      FRONTEND_HOST: ${FRONTEND_HOST}
+      FRONTEND_PORT: ${FRONTEND_PORT}
+      FRONTEND_PROTOCOL: ${FRONTEND_PROTOCOL}
+      DISCOVERY_PORT: ${DISCOVERY_PORT}
     depends_on:
       discovery-service:
         condition: service_healthy
@@ -118,12 +134,24 @@ services:
     networks:
       - nextshow-network
 
+#services
   booking-service:
     build:
       context: ./booking-service
+      args:
+        GITHUB_USERNAME: ${GITHUB_USERNAME}
+        GITHUB_TOKEN: ${GITHUB_TOKEN}
     container_name: booking-service
     ports:
-      - "8081:8081"
+      - "${BOOKING_PORT}:${BOOKING_PORT}"
+    environment:
+      SERVER_PORT: ${BOOKING_PORT}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_CONTAINER_PORT: ${MYSQL_CONTAINER_PORT}
+      KAFKA_HOST: ${KAFKA_HOST}
+      KAFKA_PORT: ${KAFKA_PORT}
+      JWT_SECRET: ${JWT_SECRET}
+      DISCOVERY_PORT: ${DISCOVERY_PORT}
     depends_on:
       discovery-service:
         condition: service_healthy
@@ -141,15 +169,30 @@ services:
   events-service:
     build:
       context: ./events-service
+      args:
+        GITHUB_USERNAME: ${GITHUB_USERNAME}
+        GITHUB_TOKEN: ${GITHUB_TOKEN}
     container_name: events-service
     ports:
-      - "8082:8082"
+      - "${EVENTS_PORT}:${EVENTS_PORT}"
+    environment:
+      SERVER_PORT: ${EVENTS_PORT}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      MYSQL_CONTAINER_PORT: ${MYSQL_CONTAINER_PORT}
+      KAFKA_HOST: ${KAFKA_HOST}
+      KAFKA_PORT: ${KAFKA_PORT}
+      JWT_SECRET: ${JWT_SECRET}
+      DISCOVERY_PORT: ${DISCOVERY_PORT}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     depends_on:
       discovery-service:
         condition: service_healthy
       mysql:
         condition: service_healthy
       kafka-server:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     volumes:
       - maven_repo:/root/.m2
@@ -159,9 +202,22 @@ services:
   shows-service:
     build:
       context: ./shows-service
+      args:
+        GITHUB_USERNAME: ${GITHUB_USERNAME}
+        GITHUB_TOKEN: ${GITHUB_TOKEN}
     container_name: shows-service
     ports:
-      - "8083:8083"
+      - "${SHOWS_PORT}:${SHOWS_PORT}"
+    environment:
+      SERVER_PORT: ${SHOWS_PORT}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      KAFKA_HOST: ${KAFKA_HOST}
+      MYSQL_CONTAINER_PORT: ${MYSQL_CONTAINER_PORT}
+      KAFKA_PORT: ${KAFKA_PORT}
+      JWT_SECRET: ${JWT_SECRET}
+      DISCOVERY_PORT: ${DISCOVERY_PORT}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     depends_on:
       discovery-service:
         condition: service_healthy
@@ -177,9 +233,27 @@ services:
   payments-notification-service:
     build:
       context: ./paymentsAndNotifictionService
+      args:
+        GITHUB_USERNAME: ${GITHUB_USERNAME}
+        GITHUB_TOKEN: ${GITHUB_TOKEN}
     container_name: payments-notification-service
     ports:
-      - "8084:8084"
+      - "${PAYMENTS_PORT}:${PAYMENTS_PORT}"
+    environment:
+      SERVER_PORT: ${PAYMENTS_PORT}
+      FRONTEND_HOST: ${FRONTEND_HOST}
+      FRONTEND_PORT: ${FRONTEND_PORT}
+      FRONTEND_PROTOCOL: ${FRONTEND_PROTOCOL}
+      NEXTSHOW_MAIL: ${NEXTSHOW_MAIL}
+      SMTP_PORT: ${SMTP_PORT}
+      MYSQL_CONTAINER_PORT: ${MYSQL_CONTAINER_PORT}
+      KAFKA_HOST: ${KAFKA_HOST}
+      KAFKA_PORT: ${KAFKA_PORT}
+      JWT_SECRET: ${JWT_SECRET}
+      DISCOVERY_PORT: ${DISCOVERY_PORT}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+      STRIPE_PUBLIC_KEY: ${STRIPE_PUBLIC_KEY}
     depends_on:
       discovery-service:
         condition: service_healthy
@@ -195,9 +269,27 @@ services:
   user-service:
     build:
       context: ./UserService
+      args:
+        GITHUB_USERNAME: ${GITHUB_USERNAME}
+        GITHUB_TOKEN: ${GITHUB_TOKEN}
     container_name: user-service
     ports:
-      - "8085:8085"
+      - "${USER_PORT}:${USER_PORT}"
+    environment:
+      SERVER_PORT: ${USER_PORT}
+      FRONTEND_HOST: ${FRONTEND_HOST}
+      FRONTEND_PORT: ${FRONTEND_PORT}
+      FRONTEND_PROTOCOL: ${FRONTEND_PROTOCOL}
+      MYSQL_CONTAINER_PORT: ${MYSQL_CONTAINER_PORT}
+      KAFKA_HOST: ${KAFKA_HOST}
+      KAFKA_PORT: ${KAFKA_PORT}
+      JWT_SECRET: ${JWT_SECRET}
+      DISCOVERY_PORT: ${DISCOVERY_PORT}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      GOOGLE_OAUTH_CLIENT_ID: ${GOOGLE_OAUTH_CLIENT_ID}
+      GOOGLE_OAUTH_CLIENT_SECRET: ${GOOGLE_OAUTH_CLIENT_SECRET}
+      NEXTSHOW_DOMAIN: ${NEXTSHOW_DOMAIN}
+      GATEWAY_PORT: ${GATEWAY_PORT}
     depends_on:
       discovery-service:
         condition: service_healthy

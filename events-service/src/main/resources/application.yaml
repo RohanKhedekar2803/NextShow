@@ -1,11 +1,12 @@
+
 spring :
   application :
     name : events-service
   datasource:
     name: events-service
-    url: jdbc:mysql://mysql:3306/events-service
+    url: jdbc:mysql://mysql:${MYSQL_CONTAINER_PORT}/events-service
     username: root
-    password: Rohan@2803
+    password: ${MYSQL_ROOT_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     properties:
@@ -18,20 +19,12 @@ spring :
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-      bootstrap-servers: kafka-server:9092
-    # consumer:
-    #   bootstrap-servers: localhost:9092
-    #   group-id: rohan-group-01
-    #   key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-    #   value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-    #   properties:
-    #     spring:
-    #       json:
-    #         trusted: 
-    #           packages: "*"
+      bootstrap-servers: ${KAFKA_HOST}:${KAFKA_PORT}
+
+
 
 server :
-  port : 8082 #8092
+  port : ${SERVER_PORT} 
 
 management:
   endpoints:
@@ -44,11 +37,11 @@ management:
 eureka:
   client:
     service-url:
-      defaultZone: http://discovery-service:8761/eureka/
+      defaultZone: http://discovery-service:${DISCOVERY_PORT}/eureka
 
 
 DATA:
-  JWT_SECRET : "abcbsjkshdahdhsahdsahdihaidhiosahdoiashdoi2222"
+  JWT_SECRET : ${JWT_SECRET}
 
 
 springdoc:
@@ -56,12 +49,11 @@ springdoc:
     path: /v3/api-docs
   swagger-ui:
     path: /swagger-ui.html
-
-
-  # cache:
-  #   type: redis
   redis:
-    host: redis
-    port: 6379
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+
+
+
 
 

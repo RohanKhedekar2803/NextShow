@@ -25,12 +25,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/auth/google")
 public class GoogleAuthController {
 
-    @Value("${spring.security.oauth2.client.registration.google.client-id}")
-    private String clientId;
-
-    @Value("${spring.security.oauth2.client.registration.google.client-secret}")
-    private String clientSecret;
-
     @Autowired
     private RestTemplate restTemplate;
 
@@ -46,6 +40,21 @@ public class GoogleAuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Value("${spring.security.oauth2.client.registration.google.client-id}")
+    private String clientId;
+
+    @Value("${spring.security.oauth2.client.registration.google.client-secret}")
+    private String clientSecret;
+
+    @Value("${app.nextshow_domain}")
+    private String nextshow_domain;
+
+    @Value("${app.gateway_port}")
+    private String gateway_port;
+
+    @Value("${app.frontend.base-url}")
+    private String frontendBaseUrl;
+
     @GetMapping("/callback")
     public ResponseEntity<?> handleGoogleCallback(@RequestParam("code") String code) {
         log.info("start");
@@ -56,7 +65,7 @@ public class GoogleAuthController {
             params.add("code", code);
             params.add("client_id", clientId);
             params.add("client_secret", clientSecret);
-            params.add("redirect_uri", "http://localhost:8080/auth/google/callback");
+            params.add("redirect_uri", "http://" + nextshow_domain + ":" + gateway_port + "/auth/google/callback");
             params.add("grant_type", "authorization_code");
 
             HttpHeaders headers = new HttpHeaders();
@@ -89,7 +98,7 @@ public class GoogleAuthController {
 
                 String jwtToken = jwtService.generateToken(email, Arrays.asList("USER"));
                 // Redirect to frontend with token in fragment
-                String redirectUrl = "http://localhost:5173/homepage#token=" + jwtToken;
+                String redirectUrl = frontendBaseUrl + "/homepage#token=" + jwtToken;
                 HttpHeaders redirectHeaders = new HttpHeaders();
                 redirectHeaders.setLocation(URI.create(redirectUrl));
                 return new ResponseEntity<>(redirectHeaders, HttpStatus.FOUND);

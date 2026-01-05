@@ -3,9 +3,9 @@ spring:
     name: "payments-and-notification-service"
   datasource:
     name: paymentsandnotifictionservice
-    url: jdbc:mysql://mysql:3306/payments-and-notification-service
+    url: jdbc:mysql://mysql:${MYSQL_CONTAINER_PORT}/payments-and-notification-service
     username: root
-    password: Rohan@2803
+    password: ${MYSQL_ROOT_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     properties:
@@ -20,11 +20,11 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-      bootstrap-servers: kafka-server:9092
+      bootstrap-servers: ${KAFKA_HOST}:${KAFKA_PORT}
       properties:
         metadata.max.age.ms: 10
     consumer:
-      bootstrap-servers: kafka-server:9092
+      bootstrap-servers: ${KAFKA_HOST}:${KAFKA_PORT}
       group-id: rohan-group-01
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
@@ -32,9 +32,9 @@ spring:
         spring.json.trusted.packages: "*"
   mail:
     host: smtp.gmail.com
-    port: 587
-    username: rohankhedekar2803@gmail.com
-    password: miti ikqs gcfa cpdo
+    port: ${SMTP_PORT}
+    username: ${NEXTSHOW_MAIL}
+    password: jpws grxu xfjw leab
     properties:
       mail:
         smtp:
@@ -44,19 +44,24 @@ spring:
 
 
 stripe:
-  secret-key: sk_test_51RA7mT4Z4twcya3mhmTNZOtUBzGXFVWOuqrmyMbhU5pw7OFN12yx9MkhGiuQrla2SvkDlTmgbS7E2L14J9BffrPY00UKgpfwJV
-  public-key: pk_test_51RA7mT4Z4twcya3mrTvKjcMRKF96pR94fxDXoaKCjy5M9cEGWA4eY0cIVBPniPZXaz8UeWQVXG0V85MAnQiE1m0900rFMaoYLa
+  secret-key: ${STRIPE_SECRET_KEY}
+  public-key: ${STRIPE_PUBLIC_KEY}
 
-# publish key - pk_test_51RA7mT4Z4twcya3mrTvKjcMRKF96pR94fxDXoaKCjy5M9cEGWA4eY0cIVBPniPZXaz8UeWQVXG0V85MAnQiE1m0900rFMaoYLa
-# secret key  - sk_test_51RA7mT4Z4twcya3mhmTNZOtUBzGXFVWOuqrmyMbhU5pw7OFN12yx9MkhGiuQrla2SvkDlTmgbS7E2L14J9BffrPY00UKgpfwJV
+app:
+  frontend:
+    protocol: ${FRONTEND_PROTOCOL}
+    host: ${FRONTEND_HOST}
+    port: ${FRONTEND_PORT}
+    base-url: ${app.frontend.protocol}://${app.frontend.host}:${app.frontend.port}
+                                  
 
 server :
-  port : 8084
+  port : ${SERVER_PORT}
 
 eureka:
   client:
     service-url:
-      defaultZone: http://discovery-service:8761/eureka/
+      defaultZone: http://discovery-service:${DISCOVERY_PORT}/eureka
 
 springdoc:
   api-docs:
@@ -65,7 +70,7 @@ springdoc:
     path: /swagger-ui.html
 
 DATA:
-  JWT_SECRET : "abcbsjkshdahdhsahdsahdihaidhiosahdoiashdoi2222"
+  JWT_SECRET : ${JWT_SECRET}
 
 
 management:

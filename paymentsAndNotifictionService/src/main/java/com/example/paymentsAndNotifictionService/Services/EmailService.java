@@ -3,6 +3,7 @@ package com.example.paymentsAndNotifictionService.Services;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -19,11 +20,16 @@ public class EmailService {
     @Autowired
     private UserServiceFeignClient userServiceFeignClient;
 
+    
+    @Value("${spring.mail.username}")
+    private String NextshowMail; // Injected AFTER object creation
+
+
     public Boolean sendEmail(PaymnentsServiceBookingObject obj) {
         String email = retrive_email_from_userservice(obj.getUserId());
 
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("khedekarrohan35@gmail.com"); // same as your spring.mail.username
+        message.setFrom(NextshowMail);
         message.setTo(email);
         message.setSubject("Booking Confirmation via Nextshow");
         message.setText("Thanks for booking via next show \n Your booking show is " + obj.getShowId()

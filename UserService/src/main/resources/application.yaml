@@ -3,9 +3,9 @@ spring :
     name : users-service
   datasource:
     name: users-service
-    url: jdbc:mysql://mysql:3306/users-service
+    url: jdbc:mysql://mysql:${MYSQL_CONTAINER_PORT}/users-service
     username: root
-    password: Rohan@2803
+    password: ${MYSQL_ROOT_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     properties:
@@ -19,11 +19,11 @@ spring :
       client:
         registration:
           google:
-            client-id: "1013179941500-37ijcddmm4l7mpe4ve55351cmqkklulk.apps.googleusercontent.com"
-            client-secret: "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"
+            client-id: ${GOOGLE_OAUTH_CLIENT_ID}
+            client-secret: ${GOOGLE_OAUTH_CLIENT_SECRET}
 
 server :
-  port : 8085
+  port : ${SERVER_PORT}
 
 logging:
   level:
@@ -40,16 +40,28 @@ management:
 
 
 DATA :
-  JWT_SECRET : "abcbsjkshdahdhsahdsahdihaidhiosahdoiashdoi2222"
+  JWT_SECRET : ${JWT_SECRET}
 
 
 eureka:
   client:
     service-url:
-      defaultZone: http://discovery-service:8761/eureka/
+      defaultZone: http://discovery-service:${DISCOVERY_PORT}/eureka
 
 springdoc:
   api-docs:
     path: /v3/api-docs
   swagger-ui:
     path: /swagger-ui.html
+
+
+app:
+  frontend:
+    protocol: ${FRONTEND_PROTOCOL}
+    host: ${FRONTEND_HOST}
+    port: ${FRONTEND_PORT}
+    base-url: ${app.frontend.protocol}://${app.frontend.host}:${app.frontend.port}
+
+  gateway_port: ${GATEWAY_PORT}
+  nextshow_domain: ${NEXTSHOW_DOMAIN}
+    

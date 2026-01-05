@@ -1,3 +1,10 @@
+app:
+  frontend:
+    protocol: ${FRONTEND_PROTOCOL}
+    host: ${FRONTEND_HOST}
+    port: ${FRONTEND_PORT}
+    base-url: ${app.frontend.protocol}://${app.frontend.host}:${app.frontend.port}
+
 spring:
   application:
     name: api-gateway
@@ -13,7 +20,7 @@ spring:
         cors-configurations:
           '[/**]':
             allowedOrigins:
-              - "http://localhost:5173"
+              - ${app.frontend.base-url}
             allowedMethods:
               - GET
               - POST
@@ -76,10 +83,10 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://discovery-service:8761/eureka/
+      defaultZone: http://discovery-service:${DISCOVERY_PORT}/eureka
 
 server:
-  port: 8080
+  port: ${SERVER_PORT}
 
 logging:
   level:

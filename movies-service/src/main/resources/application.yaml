@@ -5,7 +5,7 @@ spring :
     name: movies-service
     url: jdbc:mysql://mysql:3306/movies-service
     username: root
-    password: Rohan@2803
+    password: ${MYSQL_ROOT_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     properties:
@@ -15,8 +15,8 @@ spring :
       ddl-auto: update
     show-sql: true
 
-server :
-  port : 8083
+# server :
+#   port : ${SERVER_PORT}
 
 
 eureka:

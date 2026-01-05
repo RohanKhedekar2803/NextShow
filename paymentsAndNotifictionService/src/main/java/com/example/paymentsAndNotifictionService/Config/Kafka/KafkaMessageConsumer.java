@@ -4,6 +4,7 @@ import com.example.paymentsAndNotifictionService.Entities.Payment;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -28,17 +29,22 @@ public class KafkaMessageConsumer {
     @Autowired
     StripePaymentService StripePaymentService;
 
-    // need to configure grioup id oherwiose error will be given
+    @Value("${app.frontend.base-url}")
+    private String frontendBaseUrl;
 
     @KafkaListener(topicPattern = "payment-and-notifications", groupId = "rohan-group-01")
     public void consume(PaymnentsServiceBookingObject obj) {
+
+        String successUrl = frontendBaseUrl + "/paymentsucceded";
+        String cancelUrl = frontendBaseUrl + "/failed";
+
         System.out.println(obj.toString());
 
         long seatCount = (long) obj.getSeats().size();
 
         try {
             String checkoutString = StripePaymentService.createCheckoutSession(seatCount, obj.getSeatPrice(), "INR",
-                    "http://localhost:5173/paymentsucceded", "http://localhost:5173/failed",obj);
+                    successUrl, cancelUrl, obj);
 
             System.out.println(checkoutString);
 
