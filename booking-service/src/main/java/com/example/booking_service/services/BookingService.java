@@ -130,12 +130,14 @@ public class BookingService {
         List<Seat> seats = (List<Seat>) seatRepository.saveAll(finalSeats); // Save seats after assigning to booking
 
         // <!-- API CALL TO FOR PAYMENT AND NOTIFY SEVRVICE --!>
-        PaymentAndNotify(userId, showId, seatRequestdto, seats.get(0).getSeatPrice() * seats.size());
+        PaymentAndNotify(userId, showId, seatRequestdto, seatRequestdto.get(0).getSeatPrice());
+
+        System.out.println("details seats.get(0).getSeatPrice() * seats.size() are " + seats.get(0).getSeatPrice());
         //
 
-        bookingStatusRepository.save(new BookingStatusResponse(
-                String.valueOf(userId) + String.valueOf(showId) + seatRequestdto.get(0).getSeatId(),
-                "Ready for Payment"));
+        // bookingStatusRepository.save(new BookingStatusResponse(
+        //         String.valueOf(userId) + String.valueOf(showId) + seatRequestdto.get(0).getSeatId(),
+        //         "Ready for Payment"));
 
         // cganining status for tracking
         for (com.example.nextshowdto.Seat seat : seatRequestdto) {

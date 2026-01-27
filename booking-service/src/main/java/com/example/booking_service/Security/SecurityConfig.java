@@ -27,9 +27,6 @@ public class SecurityConfig {
 
                                 // 🔹 PUBLIC ROUTES (No Authentication Required)
                                 .authorizeHttpRequests(auth -> auth
-                                                // .requestMatchers("/Bookings/**",
-                                                // "/swagger-ui.html/**","/swagger-ui/**",
-                                                // "/v3/api-docs/**")
                                                 .requestMatchers("/swagger-ui.html/**", "/swagger-ui/**",
                                                                 "/v3/api-docs/**")
                                                 .permitAll()

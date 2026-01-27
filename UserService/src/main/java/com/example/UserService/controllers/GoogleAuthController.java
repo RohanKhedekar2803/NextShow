@@ -6,7 +6,6 @@ import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -47,25 +46,28 @@ public class GoogleAuthController {
     private String clientSecret;
 
     @Value("${app.nextshow_domain}")
-    private String nextshow_domain;
+    private String nextshowDomain;
 
     @Value("${app.gateway_port}")
-    private String gateway_port;
+    private String gatewayPort;
 
     @Value("${app.frontend.base-url}")
     private String frontendBaseUrl;
 
     @GetMapping("/callback")
-    public ResponseEntity<?> handleGoogleCallback(@RequestParam("code") String code) {
-        log.info("start");
+    public ResponseEntity<Void> handleGoogleCallback(@RequestParam("code") String code) {
+
         try {
-            // Step 1: Exchange code for token
+            // 1️⃣ Exchange authorization code for tokens
             String tokenEndpoint = "https://oauth2.googleapis.com/token";
+
             MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
             params.add("code", code);
             params.add("client_id", clientId);
             params.add("client_secret", clientSecret);
-            params.add("redirect_uri", "http://" + nextshow_domain + ":" + gateway_port + "/auth/google/callback");
+            params.add(
+                    "redirect_uri",
+                    "http://" + nextshowDomain + ":" + gatewayPort + "/auth/google/callback");
             params.add("grant_type", "authorization_code");
 
             HttpHeaders headers = new HttpHeaders();
@@ -73,41 +75,56 @@ public class GoogleAuthController {
 
             HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
 
-            ResponseEntity<Map> tokenResponse = restTemplate.postForEntity(tokenEndpoint, request, Map.class);
-            String idToken = (String) tokenResponse.getBody().get("id_token");
+            ResponseEntity<Map<String, Object>> tokenResponse = restTemplate.postForEntity(tokenEndpoint, request,
+                    (Class<Map<String, Object>>) (Class<?>) Map.class);
 
-            // Step 2: Fetch user info
-            String userInfoUrl = "https://oauth2.googleapis.com/tokeninfo?id_token=" + idToken;
-            ResponseEntity<Map> userInfoResponse = restTemplate.getForEntity(userInfoUrl, Map.class);
-
-            if (userInfoResponse.getStatusCode() == HttpStatus.OK) {
-                Map<String, Object> userInfo = userInfoResponse.getBody();
-                String email = (String) userInfo.get("email");
-                log.info("Google email: {}", email);
-
-                // Check if user exists, else create
-                try {
-                    userDetailsService.loadUserByUsername(email);
-                } catch (Exception e) {
-                    User user = new User();
-                    user.setUsername(email);
-                    user.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
-                    user.setRoles(Arrays.asList("USER"));
-                    userRepository.save(user);
-                }
-
-                String jwtToken = jwtService.generateToken(email, Arrays.asList("USER"));
-                // Redirect to frontend with token in fragment
-                String redirectUrl = frontendBaseUrl + "/homepage#token=" + jwtToken;
-                HttpHeaders redirectHeaders = new HttpHeaders();
-                redirectHeaders.setLocation(URI.create(redirectUrl));
-                return new ResponseEntity<>(redirectHeaders, HttpStatus.FOUND);
+            if (tokenResponse.getBody() == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
 
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            String idToken = (String) tokenResponse.getBody().get("id_token");
+
+            // 2️⃣ Get user info from Google
+            String userInfoUrl = "https://oauth2.googleapis.com/tokeninfo?id_token=" + idToken;
+
+            ResponseEntity<Map<String, Object>> userInfoResponse = restTemplate.getForEntity(userInfoUrl,
+                    (Class<Map<String, Object>>) (Class<?>) Map.class);
+
+            if (userInfoResponse.getStatusCode() != HttpStatus.OK ||
+                    userInfoResponse.getBody() == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+
+            String email = (String) userInfoResponse.getBody().get("email");
+            log.info("Google login email: {}", email);
+
+            // 3️⃣ Create user if not exists
+            try {
+                userDetailsService.loadUserByUsername(email);
+            } catch (Exception ex) {
+                User user = new User();
+                user.setUsername(email);
+                user.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
+                user.setRoles(List.of("USER"));
+                userRepository.save(user);
+            }
+
+            // 4️⃣ Generate JWTs
+            Map<String, String> jwtToken = jwtService.generateToken(email, List.of("USER"));
+
+            // 5️⃣ Redirect with BOTH tokens in fragment
+            String redirectUrl = frontendBaseUrl
+                    + "/homepage"
+                    + "#accessToken=" + jwtToken.get("access_token")
+                    + "&refreshToken=" + jwtToken.get("refresh_token");
+
+            HttpHeaders redirectHeaders = new HttpHeaders();
+            redirectHeaders.setLocation(URI.create(redirectUrl));
+
+            return new ResponseEntity<>(redirectHeaders, HttpStatus.FOUND);
 
         } catch (Exception e) {
-            log.error("Exception in Google callback: {}", e.getMessage(), e);
+            log.error("Exception in Google callback", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

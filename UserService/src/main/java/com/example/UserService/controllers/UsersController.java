@@ -3,18 +3,23 @@ package com.example.UserService.controllers;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.UserService.Entities.User;
+import com.example.UserService.Services.RefreshTokenService;
 import com.example.UserService.Services.userService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -24,6 +29,9 @@ public class UsersController {
 
     @Autowired
     private userService userService;
+
+    @Autowired
+    private RefreshTokenService refreshTokenService;
 
     @PostMapping("/register")
     public String registerUser(@RequestParam String username, @RequestParam String password,
@@ -44,12 +52,38 @@ public class UsersController {
         return ResponseEntity.ok(userService.retrive_email_from_ID(userId));
     }
 
-
     @GetMapping("/getuserbymail/{username}")
     public ResponseEntity<User> getUser(@PathVariable String username) {
         User user = userService.getUserByUsername(username);
         return ResponseEntity.ok(user);
     }
 
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refresh(@RequestBody Map<String, String> body) {
+        System.out.println("in refresh token call");
+        // 1️ Extract refresh token from HttpOnly cookie
+        String refreshToken = body.get("refresh_token");
 
+        if (refreshToken == null) {
+            System.out.println("inside refresh token ref null");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "REFRESH_TOKEN_MISSING"));
+        }
+
+        try {
+            // 2️ Validate & rotate refresh token
+            List<Map<String, String>> tokenPair = refreshTokenService.refresh(refreshToken);
+
+            // 4️ Return new set of token
+            return ResponseEntity.ok()
+                    .body(Map.of(
+                            "accessToken", tokenPair.get(0).get("access_token"),
+                            "refresh_token", tokenPair.get(1).get("refresh_token")));
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Access Token generation failed"));
+
+        }
+    }
 }

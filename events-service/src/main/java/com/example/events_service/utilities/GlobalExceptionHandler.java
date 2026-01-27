@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.example.events_service.exceptions.AuditoriumNotFoundException;
 import com.example.events_service.exceptions.EventNotFoundException;
+import com.example.events_service.exceptions.TokenExpiredException;
 import com.example.events_service.utilities.ErrorResponse;
 
 
@@ -37,6 +38,18 @@ public class GlobalExceptionHandler {
                 .timestamp(System.currentTimeMillis())
                 .build();
         
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(TokenExpiredException.class)
+    public ResponseEntity<ErrorResponse> TokenExpiredException(TokenExpiredException ex) {
+
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .message(ex.getMessage())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .timestamp(System.currentTimeMillis())
+                .build();
+
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 

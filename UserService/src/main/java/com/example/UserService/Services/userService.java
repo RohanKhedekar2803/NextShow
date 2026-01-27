@@ -60,13 +60,18 @@ public class userService {
         long randomLong = new java.util.Random().nextLong();
 
         userRepository
-                .save(User.builder().username(username).password(passwordEncoder.encode("OAUTH_PASSWORD" + randomLong))
+                .save(User.builder().username(username).password(passwordEncoder.encode("OAUTH_PASSWORD"))
                         .roles(roles).build());
 
     }
 
     public Map<String, String> loginUser(String username, String password) {
 
+        Map<String, String> mp = new HashMap<>();
+        if (password.equals("OAUTH_PASSWORD")) {
+            return Map.of("error", "Invalid credentials"); // case where user has used google as idp for authentication
+                                                           // so password used for it is is not valid.
+        }
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(username, password)); // GIVE CONTROLL TO AUTH MANAGER TO HANLE
                                                                               // LOGIN FLOW
@@ -75,15 +80,17 @@ public class userService {
         if (userfromDB.isPresent()) {
             Role = userfromDB.get().getRoles();
         }
-        Map<String, String> mp = new HashMap<>();
+
+        Map<String, String> jwtToken = jwtService.generateToken(username, Role);
+
         if (authentication.isAuthenticated() && userfromDB.isPresent()) {
-            mp.put("JWT-TOKEN", jwtService.generateToken(username, Role));
+            mp.put("JWT-ACCESS-TOKEN", jwtToken.get("access_token"));
+            mp.put("JWT-REFRESH-TOKEN", jwtToken.get("refresh_token"));
             mp.put("username", userfromDB.get().getUsername());
             mp.put("user_id", userfromDB.get().getId().toString());
             return mp;
         } else {
-            mp.put("error", "Invalid credentials");
-            return Map.of();
+            return Map.of("error", "Invalid credentials");
         }
 
     }

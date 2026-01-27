@@ -1,4 +1,4 @@
-package com.example.paymentsAndNotifictionService.Kafka;
+package com.example.paymentsAndNotifictionService.Config.Kafka;
 
 import com.example.paymentsAndNotifictionService.Entities.Payment;
 import java.util.List;

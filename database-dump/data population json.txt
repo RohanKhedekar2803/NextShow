@@ -1,0 +1,582 @@
+audirot=rium
+
+[
+  {
+    "name": "Cinepolis Infinity",
+    "location": "Infinity Mall",
+    "city": "Mumbai",
+    "auditoriumType": "Theater",
+    "numberofblocks": 2,
+    "seatsArrangement": [[8,8,8],[6,6]]
+  },
+  {
+    "name": "PVR Phoenix",
+    "location": "Phoenix Marketcity",
+    "city": "Mumbai",
+    "auditoriumType": "Theater",
+    "numberofblocks": 2,
+    "seatsArrangement": [[9,9],[8,8]]
+  },
+  {
+    "name": "INOX Forum",
+    "location": "Forum Mall",
+    "city": "Bangalore",
+    "auditoriumType": "Theater",
+    "numberofblocks": 2,
+    "seatsArrangement": [[7,7,7],[7,7]]
+  },
+  {
+    "name": "Carnival Cinemas",
+    "location": "Viviana Mall",
+    "city": "Thane",
+    "auditoriumType": "Theater",
+    "numberofblocks": 2,
+    "seatsArrangement": [[8,8],[8,8]]
+  },
+  {
+    "name": "Miraj Cinemas",
+    "location": "City Centre",
+    "city": "Pune",
+    "auditoriumType": "Theater",
+    "numberofblocks": 2,
+    "seatsArrangement": [[6,6,6],[8,8]]
+  },
+  {
+    "name": "Wave Cinemas",
+    "location": "Wave Mall",
+    "city": "Noida",
+    "auditoriumType": "Theater",
+    "numberofblocks": 2,
+    "seatsArrangement": [[9,9,9],[6,6]]
+  },
+  {
+    "name": "SPI Palazzo",
+    "location": "Forum Vijaya",
+    "city": "Chennai",
+    "auditoriumType": "Theater",
+    "numberofblocks": 2,
+    "seatsArrangement": [[8,8,8],[7,7]]
+  },
+  {
+    "name": "Rajhans Cinemas",
+    "location": "Iscon Mall",
+    "city": "Ahmedabad",
+    "auditoriumType": "Theater",
+    "numberofblocks": 2,
+    "seatsArrangement": [[7,7],[7,7]]
+  }
+]
+
+---
+[
+  {
+    "name": "National Drama Hall",
+    "location": "Prabhadevi",
+    "city": "Mumbai",
+    "auditoriumType": "Auditorium",
+    "numberofblocks": 2,
+    "seatsArrangement": [[7,7,7],[6,6]]
+  },
+  {
+    "name": "Kala Academy",
+    "location": "Campal",
+    "city": "Goa",
+    "auditoriumType": "Auditorium",
+    "numberofblocks": 2,
+    "seatsArrangement": [[8,8],[7,7]]
+  },
+  {
+    "name": "Ravindra Natya Mandir",
+    "location": "Prabhadevi",
+    "city": "Mumbai",
+    "auditoriumType": "Auditorium",
+    "numberofblocks": 2,
+    "seatsArrangement": [[6,6,6],[7,7]]
+  },
+  {
+    "name": "Tagore Theatre",
+    "location": "Sector 18",
+    "city": "Chandigarh",
+    "auditoriumType": "Auditorium",
+    "numberofblocks": 2,
+    "seatsArrangement": [[7,7],[7,7]]
+  },
+  {
+    "name": "NCPA Tata Theatre",
+    "location": "Nariman Point",
+    "city": "Mumbai",
+    "auditoriumType": "Auditorium",
+    "numberofblocks": 2,
+    "seatsArrangement": [[8,8,8],[6,6]]
+  },
+  {
+    "name": "Rabindra Sadan",
+    "location": "Exide",
+    "city": "Kolkata",
+    "auditoriumType": "Auditorium",
+    "numberofblocks": 2,
+    "seatsArrangement": [[7,7,7],[7,7]]
+  },
+  {
+    "name": "Siri Fort Auditorium",
+    "location": "Hauz Khas",
+    "city": "Delhi",
+    "auditoriumType": "Auditorium",
+    "numberofblocks": 2,
+    "seatsArrangement": [[8,8],[8,8]]
+  },
+  {
+    "name": "Bharatiya Vidya Bhavan",
+    "location": "Mylapore",
+    "city": "Chennai",
+    "auditoriumType": "Auditorium",
+    "numberofblocks": 2,
+    "seatsArrangement": [[6,6,6],[7,7]]
+  }
+]
+
+--
+
+[
+  {
+    "name": "Shivaji Open Ground",
+    "location": "Dadar",
+    "city": "Mumbai",
+    "auditoriumType": "Ground",
+    "numberofblocks": 3,
+    "seatsArrangement": [[12,12],[15,15],[12,12]]
+  },
+  {
+    "name": "City Sports Arena",
+    "location": "Salt Lake",
+    "city": "Kolkata",
+    "auditoriumType": "Ground",
+    "numberofblocks": 3,
+    "seatsArrangement": [[10,10],[14,14],[10,10]]
+  },
+  {
+    "name": "Jawaharlal Nehru Stadium",
+    "location": "Lodhi Road",
+    "city": "Delhi",
+    "auditoriumType": "Ground",
+    "numberofblocks": 3,
+    "seatsArrangement": [[15,15],[18,18],[15,15]]
+  },
+  {
+    "name": "Corporation Ground",
+    "location": "Indiranagar",
+    "city": "Bangalore",
+    "auditoriumType": "Ground",
+    "numberofblocks": 3,
+    "seatsArrangement": [[11,11],[16,16],[11,11]]
+  },
+  {
+    "name": "University Sports Ground",
+    "location": "University Area",
+    "city": "Pune",
+    "auditoriumType": "Ground",
+    "numberofblocks": 3,
+    "seatsArrangement": [[10,10],[14,14],[10,10]]
+  },
+  {
+    "name": "Riverfront Event Ground",
+    "location": "Sabarmati",
+    "city": "Ahmedabad",
+    "auditoriumType": "Ground",
+    "numberofblocks": 3,
+    "seatsArrangement": [[12,12],[16,16],[12,12]]
+  },
+  {
+    "name": "Beachside Open Arena",
+    "location": "Marina Beach",
+    "city": "Chennai",
+    "auditoriumType": "Ground",
+    "numberofblocks": 3,
+    "seatsArrangement": [[11,11],[15,15],[11,11]]
+  },
+  {
+    "name": "Lake View Festival Ground",
+    "location": "Hussain Sagar",
+    "city": "Hyderabad",
+    "auditoriumType": "Ground",
+    "numberofblocks": 3,
+    "seatsArrangement": [[12,12],[17,17],[12,12]]
+  }
+]
+
+
+=================
+
+Auditorium
+event
+[
+  {
+    "event_Type": "Movies",
+    "title": "Inception",
+    "genre": "Sci-Fi",
+    "releaseDate": "2010-07-16",
+    "duration": "02:28:00",
+    "description": "A skilled thief enters dreams to steal secrets.",
+    "language": ["English"],
+    "metadata": {
+      "cast": ["Leonardo DiCaprio"],
+      "posterURL": "https://example.com/inception.jpg"
+    }
+  },
+  {
+    "event_Type": "Movies",
+    "title": "Interstellar",
+    "genre": "Sci-Fi",
+    "releaseDate": "2014-11-07",
+    "duration": "02:49:00",
+    "description": "A team travels through a wormhole to save humanity.",
+    "language": ["English"],
+    "metadata": {
+      "cast": ["Matthew McConaughey"],
+      "posterURL": "https://example.com/interstellar.jpg"
+    }
+  },
+  {
+    "event_Type": "Movies",
+    "title": "The Dark Knight",
+    "genre": "Action",
+    "releaseDate": "2008-07-18",
+    "duration": "02:32:00",
+    "description": "Batman faces the Joker in Gotham City.",
+    "language": ["English"],
+    "metadata": {
+      "cast": ["Christian Bale", "Heath Ledger"],
+      "posterURL": "https://example.com/darkknight.jpg"
+    }
+  },
+  {
+    "event_Type": "Movies",
+    "title": "Avengers: Endgame",
+    "genre": "Superhero",
+    "releaseDate": "2019-04-26",
+    "duration": "03:01:00",
+    "description": "The Avengers assemble for a final battle.",
+    "language": ["English"],
+    "metadata": {
+      "cast": ["Robert Downey Jr.", "Chris Evans"],
+      "posterURL": "https://example.com/endgame.jpg"
+    }
+  },
+  {
+    "event_Type": "Movies",
+    "title": "Parasite",
+    "genre": "Thriller",
+    "releaseDate": "2019-05-30",
+    "duration": "02:12:00",
+    "description": "A poor family schemes to infiltrate a wealthy household.",
+    "language": ["Korean"],
+    "metadata": {
+      "cast": ["Song Kang-ho"],
+      "posterURL": "https://example.com/parasite.jpg"
+    }
+  },
+  {
+    "event_Type": "Movies",
+    "title": "Dune: Part One",
+    "genre": "Sci-Fi",
+    "releaseDate": "2021-10-22",
+    "duration": "02:35:00",
+    "description": "A noble family becomes embroiled in a galactic war.",
+    "language": ["English"],
+    "metadata": {
+      "cast": ["Timothée Chalamet"],
+      "posterURL": "https://example.com/dune.jpg"
+    }
+  },
+  {
+    "event_Type": "Movies",
+    "title": "Joker",
+    "genre": "Drama",
+    "releaseDate": "2019-10-04",
+    "duration": "02:02:00",
+    "description": "A failed comedian descends into madness.",
+    "language": ["English"],
+    "metadata": {
+      "cast": ["Joaquin Phoenix"],
+      "posterURL": "https://example.com/joker.jpg"
+    }
+  },
+  {
+    "event_Type": "Movies",
+    "title": "RRR",
+    "genre": "Action",
+    "releaseDate": "2022-03-25",
+    "duration": "03:07:00",
+    "description": "Two revolutionaries fight against colonial rule.",
+    "language": ["Telugu", "Hindi"],
+    "metadata": {
+      "cast": ["Ram Charan", "NTR Jr."],
+      "posterURL": "https://example.com/rrr.jpg"
+    }
+  },
+  {
+    "event_Type": "Movies",
+    "title": "3 Idiots",
+    "genre": "Comedy",
+    "releaseDate": "2009-12-25",
+    "duration": "02:51:00",
+    "description": "Three friends navigate college and life.",
+    "language": ["Hindi"],
+    "metadata": {
+      "cast": ["Aamir Khan"],
+      "posterURL": "https://example.com/3idiots.jpg"
+    }
+  },
+  {
+    "event_Type": "Movies",
+    "title": "Titanic",
+    "genre": "Romance",
+    "releaseDate": "1997-12-19",
+    "duration": "03:14:00",
+    "description": "A love story aboard the ill-fated Titanic.",
+    "language": ["English"],
+    "metadata": {
+      "cast": ["Leonardo DiCaprio", "Kate Winslet"],
+      "posterURL": "https://example.com/titanic.jpg"
+    }
+  }
+]---
+
+[
+  {
+    "event_Type": "Sports",
+    "title": "IPL Final 2025",
+    "genre": "Cricket",
+    "releaseDate": "2025-05-29",
+    "duration": "04:00:00",
+    "description": "The grand finale of the Indian Premier League.",
+    "language": ["English", "Hindi"],
+    "metadata": {
+      "cast": ["Top IPL Teams"],
+      "posterURL": "https://example.com/ipl.jpg"
+    }
+  },
+  {
+    "event_Type": "Sports",
+    "title": "ISL Championship Match",
+    "genre": "Football",
+    "releaseDate": "2025-03-18",
+    "duration": "02:30:00",
+    "description": "India's biggest football league final.",
+    "language": ["English"],
+    "metadata": {
+      "cast": ["ISL Finalists"],
+      "posterURL": "https://example.com/isl.jpg"
+    }
+  },
+  {
+    "event_Type": "Sports",
+    "title": "Pro Kabaddi League Finals",
+    "genre": "Kabaddi",
+    "releaseDate": "2025-02-10",
+    "duration": "02:00:00",
+    "description": "The ultimate kabaddi showdown.",
+    "language": ["Hindi"],
+    "metadata": {
+      "cast": ["PKL Teams"],
+      "posterURL": "https://example.com/kabaddi.jpg"
+    }
+  }
+]
+
+--
+[
+  {
+    "event_Type": "Comic Shows",
+    "title": "Zakir Khan Live",
+    "genre": "Stand-up Comedy",
+    "releaseDate": "2025-08-12",
+    "duration": "01:45:00",
+    "description": "Relatable comedy by Zakir Khan.",
+    "language": ["Hindi"],
+    "metadata": {
+      "cast": ["Zakir Khan"],
+      "posterURL": "https://example.com/zakir.jpg"
+    }
+  },
+  {
+    "event_Type": "Comic Shows",
+    "title": "Biswa Kalyan Rath Live",
+    "genre": "Stand-up Comedy",
+    "releaseDate": "2025-07-05",
+    "duration": "01:30:00",
+    "description": "Sharp observational comedy.",
+    "language": ["English", "Hindi"],
+    "metadata": {
+      "cast": ["Biswa Kalyan Rath"],
+      "posterURL": "https://example.com/biswa.jpg"
+    }
+  },
+  {
+    "event_Type": "Comic Shows",
+    "title": "Kenny Sebastian Live",
+    "genre": "Stand-up Comedy",
+    "releaseDate": "2025-09-20",
+    "duration": "01:40:00",
+    "description": "Clean and musical stand-up comedy.",
+    "language": ["English"],
+    "metadata": {
+      "cast": ["Kenny Sebastian"],
+      "posterURL": "https://example.com/kenny.jpg"
+    }
+  }
+]
+
+--
+[
+  {
+    "event_Type": "Drama",
+    "title": "Hamlet",
+    "genre": "Classic Drama",
+    "releaseDate": "2025-06-15",
+    "duration": "02:20:00",
+    "description": "Shakespeare’s timeless tragedy.",
+    "language": ["English"],
+    "metadata": {
+      "cast": ["Stage Artists"],
+      "posterURL": "https://example.com/hamlet.jpg"
+    }
+  },
+  {
+    "event_Type": "Drama",
+    "title": "Medea",
+    "genre": "Greek Tragedy",
+    "releaseDate": "2025-07-10",
+    "duration": "02:10:00",
+    "description": "A powerful tale of love and revenge.",
+    "language": ["English"],
+    "metadata": {
+      "cast": ["Theatre Artists"],
+      "posterURL": "https://example.com/medea.jpg"
+    }
+  },
+  {
+    "event_Type": "Drama",
+    "title": "Evam Indrajit",
+    "genre": "Modern Drama",
+    "releaseDate": "2025-08-01",
+    "duration": "01:55:00",
+    "description": "A modern Indian theatre classic.",
+    "language": ["Hindi"],
+    "metadata": {
+      "cast": ["Indian Theatre Group"],
+      "posterURL": "https://example.com/indrajit.jpg"
+    }
+  },
+  {
+    "event_Type": "Drama",
+    "title": "Waiting for Godot",
+    "genre": "Absurdist Drama",
+    "releaseDate": "2025-09-05",
+    "duration": "02:00:00",
+    "description": "Two men wait endlessly for someone who never arrives.",
+    "language": ["English"],
+    "metadata": {
+      "cast": ["Stage Actors"],
+      "posterURL": "https://example.com/godot.jpg"
+    }
+  }
+]
+===========================================
+shows
+shows
+
+[
+  { "eventId": 1, "auditoriumId": 1, "startTime": "2025-06-20T18:00:00", "endTime": "2025-06-20T20:30:00", "blockprices": [150, 250] },
+  { "eventId": 2, "auditoriumId": 2, "startTime": "2025-06-21T19:00:00", "endTime": "2025-06-21T21:45:00", "blockprices": [180, 280] },
+  { "eventId": 3, "auditoriumId": 3, "startTime": "2025-06-22T17:30:00", "endTime": "2025-06-22T20:00:00", "blockprices": [160, 260] },
+  { "eventId": 4, "auditoriumId": 4, "startTime": "2025-06-23T20:00:00", "endTime": "2025-06-23T23:00:00", "blockprices": [200, 320] },
+  { "eventId": 5, "auditoriumId": 5, "startTime": "2025-06-24T18:30:00", "endTime": "2025-06-24T20:45:00", "blockprices": [170, 270] },
+  { "eventId": 6, "auditoriumId": 6, "startTime": "2025-06-25T19:15:00", "endTime": "2025-06-25T21:50:00", "blockprices": [190, 300] },
+  { "eventId": 7, "auditoriumId": 7, "startTime": "2025-06-26T18:00:00", "endTime": "2025-06-26T20:15:00", "blockprices": [160, 260] },
+  { "eventId": 8, "auditoriumId": 8, "startTime": "2025-06-27T21:00:00", "endTime": "2025-06-27T23:30:00", "blockprices": [210, 340] },
+  { "eventId": 9, "auditoriumId": 1, "startTime": "2025-06-28T17:00:00", "endTime": "2025-06-28T19:50:00", "blockprices": [150, 240] },
+  { "eventId": 10, "auditoriumId": 2, "startTime": "2025-06-29T20:00:00", "endTime": "2025-06-29T23:15:00", "blockprices": [220, 360] }
+]
+
+
+[
+  {
+    "eventId": 11,
+    "auditoriumId": 12,
+    "startTime": "2025-05-29T16:00:00",
+    "endTime": "2025-05-29T20:00:00",
+    "blockprices": [300, 500, 800]
+  },
+  {
+    "eventId": 12,
+    "auditoriumId": 13,
+    "startTime": "2025-03-18T18:00:00",
+    "endTime": "2025-03-18T20:30:00",
+    "blockprices": [250, 450, 700]
+  },
+  {
+    "eventId": 13,
+    "auditoriumId": 12,
+    "startTime": "2025-02-10T17:00:00",
+    "endTime": "2025-02-10T19:00:00",
+    "blockprices": [200, 400, 650]
+  }
+]
+
+[
+  {
+    "eventId": 14,
+    "auditoriumId": 9,
+    "startTime": "2025-08-12T19:00:00",
+    "endTime": "2025-08-12T20:45:00",
+    "blockprices": [300, 500]
+  },
+  {
+    "eventId": 15,
+    "auditoriumId": 10,
+    "startTime": "2025-07-05T18:30:00",
+    "endTime": "2025-07-05T20:00:00",
+    "blockprices": [280, 480]
+  },
+  {
+    "eventId": 16,
+    "auditoriumId": 11,
+    "startTime": "2025-09-20T19:30:00",
+    "endTime": "2025-09-20T21:10:00",
+    "blockprices": [320, 520]
+  }
+]
+
+
+[
+  {
+    "eventId": 17,
+    "auditoriumId": 9,
+    "startTime": "2025-06-15T18:00:00",
+    "endTime": "2025-06-15T20:20:00",
+    "blockprices": [250, 400]
+  },
+  {
+    "eventId": 18,
+    "auditoriumId": 10,
+    "startTime": "2025-07-10T18:30:00",
+    "endTime": "2025-07-10T20:40:00",
+    "blockprices": [260, 420]
+  },
+  {
+    "eventId": 19,
+    "auditoriumId": 11,
+    "startTime": "2025-08-01T19:00:00",
+    "endTime": "2025-08-01T20:55:00",
+    "blockprices": [240, 380]
+  },
+  {
+    "eventId": 20,
+    "auditoriumId": 9,
+    "startTime": "2025-09-05T19:30:00",
+    "endTime": "2025-09-05T21:30:00",
+    "blockprices": [270, 430]
+  }
+]
+

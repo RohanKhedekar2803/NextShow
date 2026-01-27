@@ -1,4 +1,4 @@
-version: '3.1'
+version: "3.1"
 
 networks:
   nextshow-network:
@@ -8,7 +8,8 @@ volumes:
   mysql_data:
 
 services:
-  # ---------- Infrastructure ----------
+
+  # ---------- Infrastructure Services ----------
 
   zookeeper:
     image: wurstmeister/zookeeper
@@ -30,7 +31,13 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
     depends_on:
-      - zookeeper
+      zookeeper:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "bash", "-c", "echo > /dev/tcp/${KAFKA_HOST}/${KAFKA_PORT}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - nextshow-network
 
@@ -39,6 +46,11 @@ services:
     container_name: redis
     ports:
       - "${REDIS_PORT}:${REDIS_PORT}"
+    healthcheck:
+      test: ["CMD", "redis-cli", "-h", "redis", "-p", "${REDIS_PORT}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - nextshow-network
 
@@ -52,7 +64,13 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./init-multiple-dbs.sql:/docker-entrypoint-initdb.d/init-multiple-dbs.sql
+      - ./init-multiple-dbs.sql:/docker-entrypoint-initdb.d/01-init-multiple-dbs.sql
+      - ./dataseed.sql:/docker-entrypoint-initdb.d/02-dataseed.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "mysql", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - nextshow-network
 
@@ -65,8 +83,15 @@ services:
       - "${DISCOVERY_PORT}:${DISCOVERY_PORT}"
     environment:
       SERVER_PORT: ${DISCOVERY_PORT}
+      DISCOVERY_HOST: ${DISCOVERY_HOST}
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://discovery-service:${DISCOVERY_PORT}"]
+      interval: 15s
+      timeout: 5s
+      retries: 15
     networks:
       - nextshow-network
 
@@ -80,9 +105,13 @@ services:
       FRONTEND_PROTOCOL: ${FRONTEND_PROTOCOL}
       FRONTEND_HOST: ${FRONTEND_HOST}
       FRONTEND_PORT: ${FRONTEND_PORT}
+      DISCOVERY_HOST: ${DISCOVERY_HOST}
       DISCOVERY_PORT: ${DISCOVERY_PORT}
     depends_on:
-      - discovery-service
+      discovery-service:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
     networks:
       - nextshow-network
 
@@ -93,19 +122,25 @@ services:
       - "${BOOKING_PORT}:${BOOKING_PORT}"
     environment:
       SERVER_PORT: ${BOOKING_PORT}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_HOST: ${MYSQL_HOST}
       MYSQL_CONTAINER_PORT: ${MYSQL_CONTAINER_PORT}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       KAFKA_HOST: ${KAFKA_HOST}
       KAFKA_PORT: ${KAFKA_PORT}
       REDIS_HOST: ${REDIS_HOST}
       REDIS_PORT: ${REDIS_PORT}
       JWT_SECRET: ${JWT_SECRET}
+      DISCOVERY_HOST: ${DISCOVERY_HOST}
       DISCOVERY_PORT: ${DISCOVERY_PORT}
     depends_on:
-      - discovery-service
-      - mysql
-      - kafka-server
-      - redis
+      mysql:
+        condition: service_healthy
+      kafka-server:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      discovery-service:
+        condition: service_healthy
     networks:
       - nextshow-network
 
@@ -116,18 +151,25 @@ services:
       - "${EVENTS_PORT}:${EVENTS_PORT}"
     environment:
       SERVER_PORT: ${EVENTS_PORT}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_HOST: ${MYSQL_HOST}
       MYSQL_CONTAINER_PORT: ${MYSQL_CONTAINER_PORT}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       KAFKA_HOST: ${KAFKA_HOST}
       KAFKA_PORT: ${KAFKA_PORT}
       REDIS_HOST: ${REDIS_HOST}
       REDIS_PORT: ${REDIS_PORT}
       JWT_SECRET: ${JWT_SECRET}
+      DISCOVERY_HOST: ${DISCOVERY_HOST}
       DISCOVERY_PORT: ${DISCOVERY_PORT}
     depends_on:
-      - discovery-service
-      - mysql
-      - kafka-server
+      mysql:
+        condition: service_healthy
+      kafka-server:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      discovery-service:
+        condition: service_healthy
     networks:
       - nextshow-network
 
@@ -138,18 +180,25 @@ services:
       - "${SHOWS_PORT}:${SHOWS_PORT}"
     environment:
       SERVER_PORT: ${SHOWS_PORT}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_HOST: ${MYSQL_HOST}
       MYSQL_CONTAINER_PORT: ${MYSQL_CONTAINER_PORT}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       KAFKA_HOST: ${KAFKA_HOST}
       KAFKA_PORT: ${KAFKA_PORT}
       REDIS_HOST: ${REDIS_HOST}
       REDIS_PORT: ${REDIS_PORT}
       JWT_SECRET: ${JWT_SECRET}
+      DISCOVERY_HOST: ${DISCOVERY_HOST}
       DISCOVERY_PORT: ${DISCOVERY_PORT}
     depends_on:
-      - discovery-service
-      - mysql
-      - kafka-server
+      mysql:
+        condition: service_healthy
+      kafka-server:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      discovery-service:
+        condition: service_healthy
     networks:
       - nextshow-network
 
@@ -165,18 +214,23 @@ services:
       FRONTEND_PORT: ${FRONTEND_PORT}
       NEXTSHOW_MAIL: ${NEXTSHOW_MAIL}
       SMTP_PORT: ${SMTP_PORT}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_HOST: ${MYSQL_HOST}
       MYSQL_CONTAINER_PORT: ${MYSQL_CONTAINER_PORT}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       KAFKA_HOST: ${KAFKA_HOST}
       KAFKA_PORT: ${KAFKA_PORT}
       JWT_SECRET: ${JWT_SECRET}
-      DISCOVERY_PORT: ${DISCOVERY_PORT}
       STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
       STRIPE_PUBLIC_KEY: ${STRIPE_PUBLIC_KEY}
+      DISCOVERY_HOST: ${DISCOVERY_HOST}
+      DISCOVERY_PORT: ${DISCOVERY_PORT}
     depends_on:
-      - discovery-service
-      - mysql
-      - kafka-server
+      mysql:
+        condition: service_healthy
+      kafka-server:
+        condition: service_healthy
+      discovery-service:
+        condition: service_healthy
     networks:
       - nextshow-network
 
@@ -190,16 +244,20 @@ services:
       FRONTEND_PROTOCOL: ${FRONTEND_PROTOCOL}
       FRONTEND_HOST: ${FRONTEND_HOST}
       FRONTEND_PORT: ${FRONTEND_PORT}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_HOST: ${MYSQL_HOST}
       MYSQL_CONTAINER_PORT: ${MYSQL_CONTAINER_PORT}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       KAFKA_HOST: ${KAFKA_HOST}
       KAFKA_PORT: ${KAFKA_PORT}
       JWT_SECRET: ${JWT_SECRET}
-      DISCOVERY_PORT: ${DISCOVERY_PORT}
       GOOGLE_OAUTH_CLIENT_ID: ${GOOGLE_OAUTH_CLIENT_ID}
       GOOGLE_OAUTH_CLIENT_SECRET: ${GOOGLE_OAUTH_CLIENT_SECRET}
+      DISCOVERY_HOST: ${DISCOVERY_HOST}
+      DISCOVERY_PORT: ${DISCOVERY_PORT}
     depends_on:
-      - discovery-service
-      - mysql
+      mysql:
+        condition: service_healthy
+      discovery-service:
+        condition: service_healthy
     networks:
       - nextshow-network

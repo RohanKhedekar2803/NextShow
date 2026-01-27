@@ -16,13 +16,4 @@ public class PaymnentsServiceBookingObject {
     List<com.example.nextshowdto.Seat> seats;
     Double seatPrice;
 
-    // PaymnentsServiceBookingObject() {
-    // }
-
-    // public PaymnentsServiceBookingObject(Long userId, Long showId,
-    // List<com.example.nextshowdto.Seat> seats) {
-    // this.userId = userId;
-    // this.showId = showId;
-    // this.seats = seats;
-    // }
 }

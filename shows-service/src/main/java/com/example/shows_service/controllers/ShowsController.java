@@ -24,12 +24,6 @@ public class ShowsController {
     @Autowired
     private ShowsService showsService;
 
-    // Get movie name
-    @GetMapping("/name")
-    public String getMovieName() {
-        return "CT WC WTC ASHES BGT"; // Hardcoded movie name
-    }
-
     // Create a new show
     @PostMapping
     public ResponseEntity<showDTO> createShow(@RequestBody showDTO showDTO) {

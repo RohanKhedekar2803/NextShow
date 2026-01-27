@@ -32,14 +32,14 @@ public class JWTService {
         SECRET_KEY = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String generateToken(String username) {
-        return Jwts.builder()
-                .setSubject(username) // Set the username
-                .setIssuedAt(new Date()) // Set issue time
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // Expiry: 1 hour
-                .signWith(SECRET_KEY) // Sign with generated key
-                .compact();
-    }
+    // public String generateToken(String username) {
+    //     return Jwts.builder()
+    //             .setSubject(username) // Set the username
+    //             .setIssuedAt(new Date()) // Set issue time
+    //             .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // Expiry: 1 hour
+    //             .signWith(SECRET_KEY) // Sign with generated key
+    //             .compact();
+    // }
 
     public String getUsernameFromToken(String token) {
         try {

@@ -33,7 +33,9 @@ public class JWTFilter extends OncePerRequestFilter {
     private JWTService jwtService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain)
             throws ServletException, IOException {
 
         String header = request.getHeader("Authorization");
@@ -41,28 +43,50 @@ public class JWTFilter extends OncePerRequestFilter {
         if (StringUtils.hasText(header) && header.startsWith("Bearer ")) {
             String token = header.substring(7);
 
-            if (jwtService.validateToken(token)) { // Validate signature & expiration
-                String username = jwtService.getUsernameFromToken(token);
-                List<String> roles = jwtService.getRolesFromToken(token);
+            try {
+                if (jwtService.validateToken(token)) {
 
-                // Convert roles to authorities
-                List<SimpleGrantedAuthority> authorities = roles.stream()
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
+                    String username = jwtService.getUsernameFromToken(token);
+                    List<String> roles = jwtService.getRolesFromToken(token);
 
-                // Create authentication token
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, token,
-                        authorities);
+                    List<SimpleGrantedAuthority> authorities = roles.stream()
+                            .map(SimpleGrantedAuthority::new)
+                            .collect(Collectors.toList());
 
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username,
+                            null, authorities);
 
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-                System.out.println("token saved is -->" + authToken.toString());
+                    authToken.setDetails(
+                            new WebAuthenticationDetailsSource().buildDetails(request));
+
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+
+                } else {
+                    // ❌ invalid or expired token
+                    sendError(response, "Access Token expired or invalid");
+                    return; // ⛔ STOP filter chain
+                }
+
+            } catch (Exception ex) {
+                sendError(response, "Access Token expired or invalid");
+                return; // ⛔ STOP filter chain
             }
         }
 
-        filterChain.doFilter(request, response); // GO TO NEXT FILTER
+        filterChain.doFilter(request, response);
+    }
 
+    private void sendError(HttpServletResponse response, String message) throws IOException {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+
+        response.getWriter().write("""
+                    {
+                      "message": "%s",
+                      "status": 401,
+                      "timestamp": %d
+                    }
+                """.formatted(message, System.currentTimeMillis()));
     }
 
 }

@@ -8,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,5 +30,9 @@ public class BookingStatusResponse {
     public BookingStatusResponse(String bookingid, String status) {
         this.bookingid = bookingid;
         this.status = status;
+    }
+    @PrePersist
+    protected void onCreate() {
+        this.timestamp = LocalDateTime.now();
     }
 }

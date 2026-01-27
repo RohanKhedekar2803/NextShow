@@ -3,9 +3,9 @@ spring:
     name: shows-service
   datasource:
     name: shows-service
-    url: jdbc:mysql://mysql:${MYSQL_CONTAINER_PORT}/shows-service
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_CONTAINER_PORT:3306}/shows-service
     username: root
-    password: ${MYSQL_ROOT_PASSWORD}
+    password: ${MYSQL_ROOT_PASSWORD:Rohan@2803}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     properties:
@@ -14,21 +14,16 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
-  kafka:
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-      boostrap-servers:  ${KAFKA_HOST}:${KAFKA_PORT}
 
 
 server :
-  port : ${SERVER_PORT}
+  port : ${SERVER_PORT:8083}
 
 
 eureka:
   client:
     service-url:
-      defaultZone: http://discovery-service:${DISCOVERY_PORT}/eureka
+      defaultZone: http://${DISCOVERY_HOST:localhost}:${DISCOVERY_PORT:8761}/eureka
 
 springdoc:
   api-docs:
@@ -36,9 +31,9 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
   redis:
-    host: ${REDIS_HOST}
-    port: ${REDIS_PORT}
+    host: ${REDIS_HOST:redis}
+    port: ${REDIS_PORT:6379}
 
 
 DATA:
-  JWT_SECRET : ${JWT_SECRET}
+  JWT_SECRET : ${JWT_SECRET:abcbsjkshdahdhsahdsahdihaidhiosahdoiashdoi2222}

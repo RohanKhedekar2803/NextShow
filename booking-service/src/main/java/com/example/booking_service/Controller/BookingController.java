@@ -30,14 +30,6 @@ public class BookingController {
     @Autowired
     private BookingService bookingservice;
 
-    // @PostMapping("")
-    // public BookingDTO addBooking(@RequestBody com.example.nextshowdto.BookingDTO
-    // bookingDTO) {
-    // BookingDTO booking = bookingService.createBooking(bookingDTO.getUserId(),
-    // bookingDTO.getShowId(),
-    // bookingDTO.getSeats());
-    // return booking;
-    // }
     @GetMapping("/test")
     public String data() {
         return "CWT";

@@ -1,8 +1,8 @@
 app:
   frontend:
-    protocol: ${FRONTEND_PROTOCOL}
-    host: ${FRONTEND_HOST}
-    port: ${FRONTEND_PORT}
+    protocol: ${FRONTEND_PROTOCOL:http}
+    host: ${FRONTEND_HOST:localhost}
+    port: ${FRONTEND_PORT:5173}
     base-url: ${app.frontend.protocol}://${app.frontend.host}:${app.frontend.port}
 
 spring:
@@ -83,10 +83,10 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://discovery-service:${DISCOVERY_PORT}/eureka
+      defaultZone: http://${DISCOVERY_HOST:localhost}:${DISCOVERY_PORT:8761}/eureka
 
 server:
-  port: ${SERVER_PORT}
+  port: ${SERVER_PORT:8080}
 
 logging:
   level:

@@ -3,9 +3,9 @@ spring :
     name : users-service
   datasource:
     name: users-service
-    url: jdbc:mysql://mysql:${MYSQL_CONTAINER_PORT}/users-service
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_CONTAINER_PORT:3306}/users-service # add this chnage everywhere 
     username: root
-    password: ${MYSQL_ROOT_PASSWORD}
+    password: ${MYSQL_ROOT_PASSWORD:Rohan@2803}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     properties:
@@ -19,11 +19,11 @@ spring :
       client:
         registration:
           google:
-            client-id: ${GOOGLE_OAUTH_CLIENT_ID}
-            client-secret: ${GOOGLE_OAUTH_CLIENT_SECRET}
+            client-id: ${GOOGLE_OAUTH_CLIENT_ID:1013179941500-37ijcddmm4l7mpe4ve55351cmqkklulk.apps.googleusercontent.com}
+            client-secret: ${GOOGLE_OAUTH_CLIENT_SECRET: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}
 
 server :
-  port : ${SERVER_PORT}
+  port : ${SERVER_PORT:8085}
 
 logging:
   level:
@@ -40,13 +40,13 @@ management:
 
 
 DATA :
-  JWT_SECRET : ${JWT_SECRET}
+  JWT_SECRET : ${JWT_SECRET:abcbsjkshdahdhsahdsahdihaidhiosahdoiashdoi2222}
 
 
 eureka:
   client:
     service-url:
-      defaultZone: http://discovery-service:${DISCOVERY_PORT}/eureka
+      defaultZone: http://${DISCOVERY_HOST:localhost}:${DISCOVERY_PORT:8761}/eureka # add this chnage everywhere 
 
 springdoc:
   api-docs:
@@ -57,11 +57,11 @@ springdoc:
 
 app:
   frontend:
-    protocol: ${FRONTEND_PROTOCOL}
-    host: ${FRONTEND_HOST}
-    port: ${FRONTEND_PORT}
+    protocol: ${FRONTEND_PROTOCOL:http}
+    host: ${FRONTEND_HOST:localhost}
+    port: ${FRONTEND_PORT:5173}
     base-url: ${app.frontend.protocol}://${app.frontend.host}:${app.frontend.port}
 
-  gateway_port: ${GATEWAY_PORT}
-  nextshow_domain: ${NEXTSHOW_DOMAIN}
+  gateway_port: ${GATEWAY_PORT:8080}
+  nextshow_domain: ${NEXTSHOW_DOMAIN:localhost}
     

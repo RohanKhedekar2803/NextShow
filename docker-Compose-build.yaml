@@ -75,6 +75,7 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
       - ./init-multiple-dbs.sql:/docker-entrypoint-initdb.d/init-multiple-dbs.sql
+      - ./dataseed.sql:/docker-entrypoint-initdb.d/02-dataseed.sql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "mysql", "-p${MYSQL_ROOT_PASSWORD}"]
       interval: 10s
@@ -96,6 +97,7 @@ services:
       - "${DISCOVERY_PORT}:${DISCOVERY_PORT}"
     environment:
       SERVER_PORT: ${DISCOVERY_PORT}
+      DISCOVERY_HOST: ${DISCOVERY_HOST}
     depends_on:
       mysql:
         condition: service_healthy
@@ -124,6 +126,8 @@ services:
       FRONTEND_PORT: ${FRONTEND_PORT}
       FRONTEND_PROTOCOL: ${FRONTEND_PROTOCOL}
       DISCOVERY_PORT: ${DISCOVERY_PORT}
+      DISCOVERY_HOST: ${DISCOVERY_HOST}
+      MYSQL_HOST: ${MYSQL_HOST}
     depends_on:
       discovery-service:
         condition: service_healthy
@@ -152,6 +156,8 @@ services:
       KAFKA_PORT: ${KAFKA_PORT}
       JWT_SECRET: ${JWT_SECRET}
       DISCOVERY_PORT: ${DISCOVERY_PORT}
+      DISCOVERY_HOST: ${DISCOVERY_HOST}
+      MYSQL_HOST: ${MYSQL_HOST}
     depends_on:
       discovery-service:
         condition: service_healthy
@@ -185,6 +191,8 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       DISCOVERY_PORT: ${DISCOVERY_PORT}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_HOST: ${MYSQL_HOST}
+      DISCOVERY_HOST: ${DISCOVERY_HOST}
     depends_on:
       discovery-service:
         condition: service_healthy
@@ -218,6 +226,8 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       DISCOVERY_PORT: ${DISCOVERY_PORT}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_HOST: ${MYSQL_HOST}
+      DISCOVERY_HOST: ${DISCOVERY_HOST}
     depends_on:
       discovery-service:
         condition: service_healthy
@@ -254,6 +264,8 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
       STRIPE_PUBLIC_KEY: ${STRIPE_PUBLIC_KEY}
+      MYSQL_HOST: ${MYSQL_HOST}
+      DISCOVERY_HOST: ${DISCOVERY_HOST}
     depends_on:
       discovery-service:
         condition: service_healthy
@@ -290,6 +302,8 @@ services:
       GOOGLE_OAUTH_CLIENT_SECRET: ${GOOGLE_OAUTH_CLIENT_SECRET}
       NEXTSHOW_DOMAIN: ${NEXTSHOW_DOMAIN}
       GATEWAY_PORT: ${GATEWAY_PORT}
+      MYSQL_HOST: ${MYSQL_HOST}
+      DISCOVERY_HOST: ${DISCOVERY_HOST}
     depends_on:
       discovery-service:
         condition: service_healthy

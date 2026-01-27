@@ -28,24 +28,6 @@ public class KafkaMessagePublisher {
     private KafkaTemplate<String, com.example.nextshowdto.PaymnentsServiceBookingObject> Paymenttemplate;
 
     private final ConcurrentHashMap<String, CompletableFuture<String>> responseMap = new ConcurrentHashMap<>();
-
-    // public void sendToTopic(String topic, String msg) {
-
-    // BookingDTO bookingDto = new BookingDTO(1L, 101L, 501L, null, 299.99);
-    // CompletableFuture<SendResult<String, BookingDTO>> send = template.send(topic,
-    // bookingDto);
-
-    // send.whenComplete((res, ex) -> { // asyncronous way
-    // if (ex == null) {
-    // System.out.println("msg sent is [" + msg + "] to topic [" + topic + "] with
-    // offset "
-    // + res.getRecordMetadata().offset());
-    // } else {
-    // System.out.println("msg not sent error is " + ex.getMessage());
-    // }
-    // });
-    // }
-
     public void AddRequestInQueue(String topic, BookingDTO data) {
 
         CompletableFuture<SendResult<String, BookingDTO>> send = template.send(topic, data);
