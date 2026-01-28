@@ -1,0 +1,27 @@
+-------------------------------------------
+Frontend build & push tag 
+-------------------------------------------
+build dockerfile     - docker build -t rohankhedekar2803/nextshow-frontend:latest .
+push dockerfile	     - docker push rohankhedekar2803/nextshow-frontend:latest
+run docker container - docker run --name nextshow-frontend -p 5173:5173 nextshow-frontend
+
+-------------------------------------------
+backend build & push tag (build compose file)
+-------------------------------------------
+
+docker compose -f docker-compose-build.yaml build --no-cache
+docker compose -f docker-Compose-build.yaml push
+docker compose -f docker-Compose-build.yaml up
+
+
+-------------------------------------------
+start app with compose
+-------------------------------------------
+docker compose -f docker-Compose-pull.yaml up (starts whole app)
+
+
+-------------------------------------------
+DB DUMP
+-------------------------------------------
+mysqldump -u root -p --databases booking-service events-service shows-service users-service > seed.sql ( to get data backup)
+docker exec -i mysql mysqldump -u root -p --databases booking-service events-service shows-service users-service > seed.sql ( to get data backup from container)

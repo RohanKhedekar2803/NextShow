@@ -14,6 +14,7 @@ services:
   zookeeper:
     image: wurstmeister/zookeeper
     container_name: zookeeper
+    mem_limit: 512m
     ports:
       - "${ZOOKEEPER_PORT}:${ZOOKEEPER_PORT}"
     networks:
@@ -22,6 +23,8 @@ services:
   kafka-server:
     image: wurstmeister/kafka
     container_name: kafka-server
+    mem_limit: 2048m
+
     ports:
       - "${KAFKA_PORT}:${KAFKA_PORT}"
     environment:
@@ -30,6 +33,7 @@ services:
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:${KAFKA_PORT}
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_HEAP_OPTS: "-Xms768m -Xmx1536m"
     depends_on:
       zookeeper:
         condition: service_started
@@ -44,6 +48,7 @@ services:
   redis:
     image: redis:latest
     container_name: redis
+    mem_limit: 256m
     ports:
       - "${REDIS_PORT}:${REDIS_PORT}"
     healthcheck:
@@ -57,6 +62,7 @@ services:
   mysql:
     image: mysql:8
     container_name: mysql
+    mem_limit: 1536m
     restart: always
     ports:
       - "${MYSQL_EXPOSED_PORT}:${MYSQL_CONTAINER_PORT}"
@@ -79,11 +85,13 @@ services:
   discovery-service:
     image: rohankhedekar2803/nextshow-discovery-service:latest
     container_name: discovery-service
+    mem_limit: 256m
     ports:
       - "${DISCOVERY_PORT}:${DISCOVERY_PORT}"
     environment:
       SERVER_PORT: ${DISCOVERY_PORT}
       DISCOVERY_HOST: ${DISCOVERY_HOST}
+      JAVA_OPTS: "-Xms128m -Xmx192m"
     depends_on:
       mysql:
         condition: service_healthy
@@ -98,6 +106,7 @@ services:
   gateway-service:
     image: rohankhedekar2803/nextshow-gateway-service:latest
     container_name: gateway-service
+    mem_limit: 384m
     ports:
       - "${GATEWAY_PORT}:${GATEWAY_PORT}"
     environment:
@@ -107,6 +116,7 @@ services:
       FRONTEND_PORT: ${FRONTEND_PORT}
       DISCOVERY_HOST: ${DISCOVERY_HOST}
       DISCOVERY_PORT: ${DISCOVERY_PORT}
+      JAVA_OPTS: "-Xms128m -Xmx256m"
     depends_on:
       discovery-service:
         condition: service_healthy
@@ -118,6 +128,7 @@ services:
   booking-service:
     image: rohankhedekar2803/nextshow-booking-service:latest
     container_name: booking-service
+    mem_limit: 384m
     ports:
       - "${BOOKING_PORT}:${BOOKING_PORT}"
     environment:
@@ -132,6 +143,7 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       DISCOVERY_HOST: ${DISCOVERY_HOST}
       DISCOVERY_PORT: ${DISCOVERY_PORT}
+      JAVA_OPTS: "-Xms192m -Xmx320m"
     depends_on:
       mysql:
         condition: service_healthy
@@ -147,6 +159,7 @@ services:
   events-service:
     image: rohankhedekar2803/nextshow-events-service:latest
     container_name: events-service
+    mem_limit: 384m
     ports:
       - "${EVENTS_PORT}:${EVENTS_PORT}"
     environment:
@@ -161,6 +174,7 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       DISCOVERY_HOST: ${DISCOVERY_HOST}
       DISCOVERY_PORT: ${DISCOVERY_PORT}
+      JAVA_OPTS: "-Xms128m -Xmx256m"
     depends_on:
       mysql:
         condition: service_healthy
@@ -176,6 +190,7 @@ services:
   shows-service:
     image: rohankhedekar2803/nextshow-shows-service:latest
     container_name: shows-service
+    mem_limit: 384m
     ports:
       - "${SHOWS_PORT}:${SHOWS_PORT}"
     environment:
@@ -190,6 +205,7 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       DISCOVERY_HOST: ${DISCOVERY_HOST}
       DISCOVERY_PORT: ${DISCOVERY_PORT}
+      JAVA_OPTS: "-Xms128m -Xmx256m"
     depends_on:
       mysql:
         condition: service_healthy
@@ -205,6 +221,7 @@ services:
   payments-notification-service:
     image: rohankhedekar2803/nextshow-payments-notification-service:latest
     container_name: payments-notification-service
+    mem_limit: 384m
     ports:
       - "${PAYMENTS_PORT}:${PAYMENTS_PORT}"
     environment:
@@ -224,6 +241,7 @@ services:
       STRIPE_PUBLIC_KEY: ${STRIPE_PUBLIC_KEY}
       DISCOVERY_HOST: ${DISCOVERY_HOST}
       DISCOVERY_PORT: ${DISCOVERY_PORT}
+      JAVA_OPTS: "-Xms192m -Xmx320m"
     depends_on:
       mysql:
         condition: service_healthy
@@ -237,6 +255,7 @@ services:
   user-service:
     image: rohankhedekar2803/nextshow-user-service:latest
     container_name: user-service
+    mem_limit: 384m
     ports:
       - "${USER_PORT}:${USER_PORT}"
     environment:
@@ -254,9 +273,24 @@ services:
       GOOGLE_OAUTH_CLIENT_SECRET: ${GOOGLE_OAUTH_CLIENT_SECRET}
       DISCOVERY_HOST: ${DISCOVERY_HOST}
       DISCOVERY_PORT: ${DISCOVERY_PORT}
+      JAVA_OPTS: "-Xms128m -Xmx256m"
     depends_on:
       mysql:
         condition: service_healthy
+      discovery-service:
+        condition: service_healthy
+    networks:
+      - nextshow-network
+
+  frontend:
+    image: rohankhedekar2803/nextshow-frontend:latest
+    container_name: nextshow-frontend
+    mem_limit: 128m
+    ports:
+      - "5173:5173"
+    depends_on:
+      gateway-service:
+        condition: service_started
       discovery-service:
         condition: service_healthy
     networks:
