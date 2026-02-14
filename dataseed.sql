@@ -48,7 +48,6 @@ LOCK TABLES `booking` WRITE;
 /*!40000 ALTER TABLE `booking` DISABLE KEYS */;
 /*!40000 ALTER TABLE `booking` ENABLE KEYS */;
 UNLOCK TABLES;
-
 --
 -- Table structure for table `booking_archive`
 --

@@ -60,8 +60,9 @@ app:
     protocol: ${FRONTEND_PROTOCOL:http}
     host: ${FRONTEND_HOST:localhost}
     port: ${FRONTEND_PORT:5173}
-    base-url: ${app.frontend.protocol}://${app.frontend.host}:${app.frontend.port}
-
+    # base-url: ${app.frontend.protocol}://${app.frontend.host}:${app.frontend.port}
+    base-url: ${app.frontend.protocol}://${app.frontend.host}
+# 
   gateway_port: ${GATEWAY_PORT:8080}
   nextshow_domain: ${NEXTSHOW_DOMAIN:localhost}
     

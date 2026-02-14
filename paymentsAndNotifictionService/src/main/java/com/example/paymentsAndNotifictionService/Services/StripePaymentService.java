@@ -20,11 +20,12 @@ public class StripePaymentService {
         private String secretKey;
 
         public String createCheckoutSession(Long quantity, Double amount, String currency, String successUrl,
-                        String cancelUrl, PaymnentsServiceBookingObject obj) throws StripeException { // call build
-                                                                                                      // params to build
-                                                                                                      // payment params
-                                                                                                      // in 1 object
-                                                                                                      // suitable
+                        String cancelUrl, PaymnentsServiceBookingObject obj, String key) throws StripeException { // call
+                                                                                                                  // build
+                // params to build
+                // payment params
+                // in 1 object
+                // suitable
                 // preprocess
                 List<Seat> seats = obj.getSeats();
 
@@ -39,13 +40,13 @@ public class StripePaymentService {
                 // actual session call
 
                 SessionCreateParams params = buildSessionParams(quantity, amount, currency, enhancedSuccessUrl,
-                                cancelUrl);
+                                cancelUrl, key);
                 Session session = Session.create(params);
                 return session.getUrl();
         }
 
         private SessionCreateParams buildSessionParams(Long quantity, Double amount, String currency, String successUrl,
-                        String cancelUrl) { // actually build param required by stripe
+                        String cancelUrl, String key) { // actually build param required by stripe
                 return SessionCreateParams.builder()
                                 .setMode(SessionCreateParams.Mode.PAYMENT)
                                 .setSuccessUrl(successUrl)
@@ -53,6 +54,8 @@ public class StripePaymentService {
                                 .addLineItem(buildLineItem(quantity, amount, currency)) // build data apart from urls
                                                                                         // and payment mode
                                                                                         // setting
+                                .putMetadata("bookingKey", key)
+                                .setExpiresAt((System.currentTimeMillis() / 1000) + (30 * 60)) // expire in 30 mins
                                 .build();
         }
 

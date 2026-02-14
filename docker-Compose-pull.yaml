@@ -107,6 +107,8 @@ services:
     image: rohankhedekar2803/nextshow-gateway-service:latest
     container_name: gateway-service
     mem_limit: 384m
+    restart: always
+    pull_policy: always
     ports:
       - "${GATEWAY_PORT}:${GATEWAY_PORT}"
     environment:
@@ -128,6 +130,8 @@ services:
   booking-service:
     image: rohankhedekar2803/nextshow-booking-service:latest
     container_name: booking-service
+    restart: always
+    pull_policy: always
     mem_limit: 384m
     ports:
       - "${BOOKING_PORT}:${BOOKING_PORT}"
@@ -159,6 +163,8 @@ services:
   events-service:
     image: rohankhedekar2803/nextshow-events-service:latest
     container_name: events-service
+    restart: always
+    pull_policy: always
     mem_limit: 384m
     ports:
       - "${EVENTS_PORT}:${EVENTS_PORT}"
@@ -191,6 +197,8 @@ services:
     image: rohankhedekar2803/nextshow-shows-service:latest
     container_name: shows-service
     mem_limit: 384m
+    restart: always
+    pull_policy: always
     ports:
       - "${SHOWS_PORT}:${SHOWS_PORT}"
     environment:
@@ -221,6 +229,8 @@ services:
   payments-notification-service:
     image: rohankhedekar2803/nextshow-payments-notification-service:latest
     container_name: payments-notification-service
+    restart: always
+    pull_policy: always
     mem_limit: 384m
     ports:
       - "${PAYMENTS_PORT}:${PAYMENTS_PORT}"
@@ -256,6 +266,8 @@ services:
     image: rohankhedekar2803/nextshow-user-service:latest
     container_name: user-service
     mem_limit: 384m
+    restart: always
+    pull_policy: always
     ports:
       - "${USER_PORT}:${USER_PORT}"
     environment:
@@ -268,6 +280,7 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       KAFKA_HOST: ${KAFKA_HOST}
       KAFKA_PORT: ${KAFKA_PORT}
+      NEXTSHOW_DOMAIN: ${NEXTSHOW_DOMAIN}
       JWT_SECRET: ${JWT_SECRET}
       GOOGLE_OAUTH_CLIENT_ID: ${GOOGLE_OAUTH_CLIENT_ID}
       GOOGLE_OAUTH_CLIENT_SECRET: ${GOOGLE_OAUTH_CLIENT_SECRET}
@@ -282,16 +295,31 @@ services:
     networks:
       - nextshow-network
 
+  # frontend:
+  #   image: rohankhedekar2803/nextshow-frontend:latest
+  #   container_name: nextshow-frontend
+  #   mem_limit: 128m
+  #   ports:
+  #     - "5173:5173"
+  #   depends_on:
+  #     gateway-service:
+  #       condition: service_started
+  #     discovery-service:
+  #       condition: service_healthy
+  #   networks:
+  #     - nextshow-network
   frontend:
-    image: rohankhedekar2803/nextshow-frontend:latest
+    image: nginx:alpine
     container_name: nextshow-frontend
-    mem_limit: 128m
+    restart: always
+    pull_policy: always
     ports:
-      - "5173:5173"
+      - "80:80"
+    volumes:
+      - ./dist:/usr/share/nginx/html
+      - ./nginx-frontend.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       gateway-service:
         condition: service_started
-      discovery-service:
-        condition: service_healthy
     networks:
       - nextshow-network

@@ -3,12 +3,13 @@ app:
     protocol: ${FRONTEND_PROTOCOL:http}
     host: ${FRONTEND_HOST:localhost}
     port: ${FRONTEND_PORT:5173}
-    base-url: ${app.frontend.protocol}://${app.frontend.host}:${app.frontend.port}
+    base-url: ${app.frontend.protocol}://${app.frontend.host}
+    base-url-withport: ${app.frontend.protocol}://${app.frontend.host}
 
 spring:
   application:
     name: api-gateway
-
+  forward-headers-strategy: framework
   main:
     web:
       application:
@@ -21,6 +22,7 @@ spring:
           '[/**]':
             allowedOrigins:
               - ${app.frontend.base-url}
+              - ${app.frontend.base-url-withport}
             allowedMethods:
               - GET
               - POST

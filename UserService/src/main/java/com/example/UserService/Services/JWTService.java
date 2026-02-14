@@ -122,7 +122,7 @@ public class JWTService {
                 log.error("Invalid JWT Token: {}");
                 throw new RuntimeException("Invalid JWT Token");
             }
-            if (expiration.after(new Date())) {
+            if (expiration.before(new Date())) {
                 throw new TokenExpiredException("Access Token expired");
             }
             return true;

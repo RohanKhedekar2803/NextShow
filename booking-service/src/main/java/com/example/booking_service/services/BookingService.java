@@ -136,8 +136,9 @@ public class BookingService {
         //
 
         // bookingStatusRepository.save(new BookingStatusResponse(
-        //         String.valueOf(userId) + String.valueOf(showId) + seatRequestdto.get(0).getSeatId(),
-        //         "Ready for Payment"));
+        // String.valueOf(userId) + String.valueOf(showId) +
+        // seatRequestdto.get(0).getSeatId(),
+        // "Ready for Payment"));
 
         // cganining status for tracking
         for (com.example.nextshowdto.Seat seat : seatRequestdto) {
@@ -147,7 +148,6 @@ public class BookingService {
                     "Ready for Payment"));
 
         }
-
         System.out.println("cd ..re");
         booking.setSeats(seats);
         return entityToDTO(booking);

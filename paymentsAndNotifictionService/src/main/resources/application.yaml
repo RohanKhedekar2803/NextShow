@@ -46,14 +46,15 @@ spring:
 stripe:
   secret-key: ${STRIPE_SECRET_KEY:sk_test_51RA7mT4Z4twcya3mhmTNZOtUBzGXFVWOuqrmyMbhU5pw7OFN12yx9MkhGiuQrla2SvkDlTmgbS7E2L14J9BffrPY00UKgpfwJV}
   public-key: ${STRIPE_PUBLIC_KEY:pk_test_51RA7mT4Z4twcya3mrTvKjcMRKF96pR94fxDXoaKCjy5M9cEGWA4eY0cIVBPniPZXaz8UeWQVXG0V85MAnQiE1m0900rFMaoYLa}
+  webhook-secret: ${WEBHOOK_SECRET:whsec_dE9ZGGWsd4j2S0jglA9RbIp4MZIro0eT}
 
 app:
   frontend:
     protocol: ${FRONTEND_PROTOCOL:http}
     host: ${FRONTEND_HOST:localhost}
     port: ${FRONTEND_PORT:5173}
-    base-url: ${app.frontend.protocol}://${app.frontend.host}:${app.frontend.port}
-                                  
+    # base-url: ${app.frontend.protocol}://${app.frontend.host}:${app.frontend.port}
+    base-url: ${app.frontend.protocol}://${app.frontend.host}                          
 
 server :
   port : ${SERVER_PORT:8084}

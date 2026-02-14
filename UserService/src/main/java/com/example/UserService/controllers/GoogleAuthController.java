@@ -69,7 +69,8 @@ public class GoogleAuthController {
                     "redirect_uri",
                     "http://" + nextshowDomain + ":" + gatewayPort + "/auth/google/callback");
             params.add("grant_type", "authorization_code");
-
+            System.out.println("redirect url is" + "redirect_uri" + "http://" + nextshowDomain + ":" + gatewayPort
+                    + "/auth/google/callback");
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 

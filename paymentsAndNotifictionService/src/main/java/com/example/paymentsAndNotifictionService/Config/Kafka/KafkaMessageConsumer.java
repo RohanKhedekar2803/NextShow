@@ -15,6 +15,8 @@ import com.example.paymentsAndNotifictionService.Services.EmailService;
 import com.example.paymentsAndNotifictionService.Services.StripePaymentService;
 import com.stripe.exception.StripeException;
 import com.example.paymentsAndNotifictionService.Cache.PaymentCache;
+import com.example.paymentsAndNotifictionService.Cache.StripeInfoStore;
+import com.example.paymentsAndNotifictionService.Cache.stripecallbackUserInfo;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,15 +45,21 @@ public class KafkaMessageConsumer {
         long seatCount = (long) obj.getSeats().size();
 
         try {
+            String key = obj.getUserId() + "-" + obj.getShowId() + "-" + obj.getSeats().get(0).getSeatId(); // also used
+                                                                                                            // for
+                                                                                                            // stripe to
+                                                                                                            // identify
+                                                                                                            // booking
+
             String checkoutString = StripePaymentService.createCheckoutSession(seatCount, obj.getSeatPrice(), "INR",
-                    successUrl, cancelUrl, obj);
+                    successUrl, cancelUrl, obj, key);
 
             System.out.println(checkoutString);
 
-            String key = obj.getUserId() + "-" + obj.getShowId() + "-" + obj.getSeats().get(0).getSeatId();
             PaymentCache.store(key, checkoutString);
+            StripeInfoStore.Store(key, new stripecallbackUserInfo(obj.getUserId(), obj.getShowId(), obj.getSeats()));
 
-            emailService.sendEmail(obj);
+            // emailService.sendEmail(obj);
         } catch (StripeException e) {
             System.out.println("Cound't initiate payment Session");
             e.printStackTrace();
