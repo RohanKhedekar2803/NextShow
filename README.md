@@ -68,7 +68,7 @@ Watch the full walkthrough here: **[NextShow Demo Video](https://youtu.be/VFzqAi
                                                ▼
                                    ┌───────────────────────┐
                         Client ───►│      API Gateway      │
-                                   │   (JWT Validation)    │
+                                   │      │
                                    └───────────┬───────────┘
                                                │
         ┌───────────────┬────────────────┬─────┴───────────┬───────────────┐
